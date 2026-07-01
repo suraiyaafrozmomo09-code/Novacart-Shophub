@@ -12,16 +12,6 @@ NovaCart includes:
 - Supabase-backed catalog, auth, and commerce data
 - A Python backend for recommendation and scraping workflows
 
-## Preview
-
-### Homepage
-
-![NovaCart homepage](docs/screenshots/novacart-homepage.png)
-
-### Product browsing
-
-![NovaCart products page](docs/screenshots/novacart-products.png)
-
 ## Tech stack
 
 | Layer | Technology |
