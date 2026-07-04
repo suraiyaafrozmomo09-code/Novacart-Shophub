@@ -8,25 +8,86 @@ import { supabase } from "@/lib/supabase";
 import { SmartImage } from "@/components/ui/smart-image";
 import { useAuth } from "@/components/layout/supabase-provider";
 import { cn } from "@/lib/utils";
-import type { ProductVariant } from "@/types";
+import type { ProductVariant, Review, ReviewLanguage } from "@/types";
 import RecommendationSection from "@/components/products/recommendation-section";
 import { getProductDisplayId, getProductDisplaySrc, getProductImagePrompt } from "@/lib/product-media";
 import {
+  FREE_SHIPPING_THRESHOLD_USD,
   formatCurrency,
   getProductStock,
   type ProductWithRelations,
 } from "@/lib/storefront";
 
+interface ProductReview extends Review {
+  user?: {
+    full_name?: string;
+    email?: string;
+  };
+}
+
+const reviewLanguageLabels: Record<ReviewLanguage, string> = {
+  english: "English",
+  bangla: "Bangla",
+  banglish: "Banglish",
+};
+
+const reviewPlaceholders: Record<ReviewLanguage, string> = {
+  english: "Write your review in English",
+  bangla: "বাংলায় আপনার রিভিউ লিখুন",
+  banglish: "Banglish e apnar review likhun",
+};
+
 export default function ProductDetailPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const { user } = useAuth();
+  const canReview = user?.role === "customer";
   const [product, setProduct] = useState<ProductWithRelations | null>(null);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
   const [loading, setLoading] = useState(true);
   const [addingToCart, setAddingToCart] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [reviews, setReviews] = useState<ProductReview[]>([]);
+  const [submittingReview, setSubmittingReview] = useState(false);
+  const [reviewNotice, setReviewNotice] = useState<string | null>(null);
+  const [reviewFormTouched, setReviewFormTouched] = useState(false);
+  const [reviewForm, setReviewForm] = useState<{
+    rating: number;
+    language: ReviewLanguage;
+    comment: string;
+  }>({
+    rating: 5,
+    language: "english",
+    comment: "",
+  });
+
+  const existingReview = user ? reviews.find((review) => review.user_id === user.id) : undefined;
+  const currentReviewForm = reviewFormTouched
+    ? reviewForm
+    : {
+        rating: existingReview?.rating ?? reviewForm.rating,
+        language: existingReview?.language ?? reviewForm.language,
+        comment: existingReview?.comment ?? reviewForm.comment,
+      };
+
+  const fetchProductData = async (productId: string) => {
+    const [{ data, error: fetchError }, { data: reviewRows, error: reviewsError }] = await Promise.all([
+      supabase
+        .from("products")
+        .select("*, category:categories(*), variants:product_variants(*)")
+        .eq("id", productId)
+        .eq("status", "active")
+        .single(),
+      supabase
+        .from("reviews")
+        .select("id, product_id, user_id, rating, comment, language, created_at, updated_at, user:users(full_name, email)")
+        .eq("product_id", productId)
+        .order("created_at", { ascending: false }),
+    ]);
+
+    return { data, fetchError, reviewRows, reviewsError };
+  };
 
   useEffect(() => {
     if (!params?.id) return;
@@ -35,12 +96,7 @@ export default function ProductDetailPage() {
       setLoading(true);
       setError(null);
 
-      const { data, error: fetchError } = await supabase
-        .from("products")
-        .select("*, category:categories(*), variants:product_variants(*)")
-        .eq("id", params.id)
-        .eq("status", "active")
-        .single();
+      const { data, fetchError, reviewRows, reviewsError } = await fetchProductData(params.id);
 
       if (fetchError) {
         setError(fetchError.message);
@@ -48,10 +104,14 @@ export default function ProductDetailPage() {
         return;
       }
 
-      const resolvedProduct = data as ProductWithRelations;
+      if (reviewsError) {
+        console.error("Failed to load reviews:", reviewsError);
+      }
 
+      const resolvedProduct = data as ProductWithRelations;
       setProduct(resolvedProduct);
       setSelectedVariant(data.variants?.[0] || null);
+      setReviews((reviewRows || []) as ProductReview[]);
       setLoading(false);
     };
 
@@ -91,6 +151,62 @@ export default function ProductDetailPage() {
     }
     
     setAddingToCart(false);
+  };
+
+  const handleReviewSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!user || !product) {
+      setReviewNotice("Please sign in to leave a review.");
+      return;
+    }
+
+    if (!canReview) {
+      setReviewNotice("Only customer accounts can post reviews.");
+      return;
+    }
+
+    if (!currentReviewForm.comment.trim()) {
+      setReviewNotice("Please write a short review before submitting.");
+      return;
+    }
+
+    setSubmittingReview(true);
+    setReviewNotice(null);
+
+    const { error: reviewError } = await supabase.from("reviews").upsert(
+      {
+        product_id: product.id,
+        user_id: user.id,
+        rating: currentReviewForm.rating,
+        language: currentReviewForm.language,
+        comment: currentReviewForm.comment.trim(),
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "product_id,user_id" }
+    );
+
+    if (reviewError) {
+      console.error("Failed to submit review:", reviewError);
+      setReviewNotice("We couldn't save your review right now. Please apply the latest review migration and try again.");
+      setSubmittingReview(false);
+      return;
+    }
+
+    const { data, reviewRows } = await fetchProductData(product.id);
+    if (data) {
+      setProduct(data as ProductWithRelations);
+      setSelectedVariant(data.variants?.[0] || null);
+    }
+    setReviews((reviewRows || []) as ProductReview[]);
+    setReviewFormTouched(false);
+    setReviewForm({
+      rating: currentReviewForm.rating,
+      language: currentReviewForm.language,
+      comment: currentReviewForm.comment.trim(),
+    });
+    setReviewNotice("Your review was saved successfully.");
+    setSubmittingReview(false);
   };
 
   if (loading) {
@@ -182,6 +298,7 @@ export default function ProductDetailPage() {
                     <Star size={14} className="fill-amber-400 text-amber-400" />
                     {product.average_rating.toFixed(1)} rating
                   </span>
+                  <span>{product.review_count} review{product.review_count === 1 ? "" : "s"}</span>
                   <span>{product.brand || "Nova Select"}</span>
                   <span>Product code: <span className="font-semibold text-white">{getProductDisplayId(product)}</span></span>
                 </div>
@@ -288,7 +405,7 @@ export default function ProductDetailPage() {
                     Delivery promise
                   </div>
                   <p className="mt-2 text-sm text-white/58">
-                    Orders above $50 qualify for free shipping. Admin can review each order status from the dashboard after checkout.
+                    Orders above {formatCurrency(FREE_SHIPPING_THRESHOLD_USD)} qualify for free shipping. Admin can review each order status from the dashboard after checkout.
                   </p>
                   <div className="flex items-center gap-2 text-sm font-semibold text-white">
                     <ShieldCheck size={16} className="text-white/68" />
@@ -311,6 +428,171 @@ export default function ProductDetailPage() {
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="mb-10 grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+          <section className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-[0_24px_70px_rgba(3,2,10,0.28)] backdrop-blur-xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/48">Customer reviews</p>
+            <div className="mt-3 flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <h2 className="text-2xl font-semibold text-white">What shoppers are saying</h2>
+                <p className="mt-2 text-sm text-white/52">
+                  Reviews can be written in English, Bangla, or Banglish.
+                </p>
+              </div>
+              <div className="rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-sm font-semibold text-white/78">
+                {product.average_rating.toFixed(1)} / 5 from {product.review_count} review{product.review_count === 1 ? "" : "s"}
+              </div>
+            </div>
+
+            <div className="mt-6 space-y-4">
+              {reviews.length === 0 ? (
+                <div className="rounded-[1.5rem] border border-dashed border-white/12 bg-white/[0.02] px-5 py-8 text-center text-white/50">
+                  No customer reviews yet. Be the first to share your thoughts.
+                </div>
+              ) : (
+                reviews.map((review) => (
+                  <article key={review.id} className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div>
+                        <p className="font-semibold text-white">
+                          {review.user?.full_name || review.user?.email?.split("@")[0] || "Customer"}
+                        </p>
+                        <p className="mt-1 text-xs text-white/42">
+                          {new Date(review.created_at).toLocaleDateString("en-BD", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/65">
+                          {reviewLanguageLabels[review.language]}
+                        </span>
+                        <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/20 bg-amber-400/10 px-3 py-1 text-xs font-semibold text-amber-300">
+                          <Star size={12} className="fill-amber-400 text-amber-400" />
+                          {review.rating.toFixed(1)}
+                        </span>
+                      </div>
+                    </div>
+                    <p className="mt-4 whitespace-pre-line text-sm leading-7 text-white/72">
+                      {review.comment}
+                    </p>
+                  </article>
+                ))
+              )}
+            </div>
+          </section>
+
+          <section className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-[0_24px_70px_rgba(3,2,10,0.28)] backdrop-blur-xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/48">Write a review</p>
+            <h2 className="mt-3 text-2xl font-semibold text-white">Share your experience</h2>
+            <p className="mt-2 text-sm text-white/52">
+              Leave a rating and comment in the language you prefer.
+            </p>
+
+            {!user ? (
+              <div className="mt-6 rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5 text-sm text-white/60">
+                Please{" "}
+                <Link href="/login" className="font-semibold text-white underline">
+                  sign in
+                </Link>{" "}
+                to write a review for this product.
+              </div>
+            ) : !canReview ? (
+              <div className="mt-6 rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5 text-sm text-white/60">
+                Reviews are available for customer accounts.
+              </div>
+            ) : (
+              <form onSubmit={handleReviewSubmit} className="mt-6 space-y-5">
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-white/72">Rating</label>
+                  <div className="flex flex-wrap gap-2">
+                    {[1, 2, 3, 4, 5].map((rating) => (
+                      <button
+                        key={rating}
+                        type="button"
+                        onClick={() => {
+                          setReviewFormTouched(true);
+                          setReviewForm((current) => ({ ...current, rating }));
+                        }}
+                        className={cn(
+                          "inline-flex items-center gap-1 rounded-full border px-4 py-2 text-sm font-semibold transition",
+                          currentReviewForm.rating === rating
+                            ? "border-amber-400/30 bg-amber-400/10 text-amber-300"
+                            : "border-white/12 bg-white/[0.03] text-white/68 hover:border-white/24"
+                        )}
+                      >
+                        <Star size={14} className={cn(currentReviewForm.rating >= rating ? "fill-amber-400 text-amber-400" : "text-white/35")} />
+                        {rating}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-white/72">Review language</label>
+                  <div className="flex flex-wrap gap-2">
+                    {(["english", "bangla", "banglish"] as ReviewLanguage[]).map((language) => (
+                      <button
+                        key={language}
+                        type="button"
+                        onClick={() => {
+                          setReviewFormTouched(true);
+                          setReviewForm((current) => ({ ...current, language }));
+                        }}
+                        className={cn(
+                          "rounded-full border px-4 py-2 text-sm font-semibold transition",
+                          currentReviewForm.language === language
+                            ? "border-white bg-white text-slate-950"
+                            : "border-white/12 bg-white/[0.03] text-white/68 hover:border-white/24"
+                        )}
+                      >
+                        {reviewLanguageLabels[language]}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="review-comment" className="mb-2 block text-sm font-medium text-white/72">
+                    Your comment
+                  </label>
+                  <textarea
+                    id="review-comment"
+                    value={currentReviewForm.comment}
+                    onChange={(e) => {
+                      setReviewFormTouched(true);
+                      setReviewForm((current) => ({ ...current, comment: e.target.value }));
+                    }}
+                    rows={6}
+                    placeholder={reviewPlaceholders[currentReviewForm.language]}
+                    className="w-full rounded-[1.4rem] border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/30 focus:border-white/18 focus:bg-white/[0.05]"
+                  />
+                </div>
+
+                {reviewNotice && (
+                  <div className="rounded-[1.3rem] border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/75">
+                    {reviewNotice}
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={submittingReview}
+                  className={cn(
+                    "inline-flex w-full items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition",
+                    submittingReview
+                      ? "cursor-not-allowed bg-white/12 text-white/40"
+                      : "bg-white text-slate-950 hover:bg-white/90"
+                  )}
+                >
+                  {submittingReview ? "Saving review..." : "Post review"}
+                </button>
+              </form>
+            )}
+          </section>
         </div>
 
         <RecommendationSection productId={product.id} productName={product.name} />

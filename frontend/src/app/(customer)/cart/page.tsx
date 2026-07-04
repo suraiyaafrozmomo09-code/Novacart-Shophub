@@ -13,7 +13,10 @@ import { getProductDisplaySrc, getProductImagePrompt } from "@/lib/product-media
 import {
   buildCartSeedProducts,
   buildRecommendations,
+  FREE_SHIPPING_THRESHOLD_USD,
   formatCurrency,
+  formatShippingLabel,
+  STANDARD_SHIPPING_USD,
   type ProductWithRelations,
 } from "@/lib/storefront";
 
@@ -220,12 +223,16 @@ export default function CartPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-white/55">Shipping</span>
-                    <span className="font-semibold text-white">{total > 50 ? "Free" : "$5.99"}</span>
+                    <span className="font-semibold text-white">
+                      {formatShippingLabel(total > FREE_SHIPPING_THRESHOLD_USD ? 0 : STANDARD_SHIPPING_USD)}
+                    </span>
                   </div>
                   <hr className="my-3 border-white/8" />
                   <div className="flex justify-between text-lg">
                     <span className="font-bold text-white">Total</span>
-                    <span className="font-bold text-fuchsia-300">{formatCurrency(total + (total > 50 ? 0 : 5.99))}</span>
+                    <span className="font-bold text-fuchsia-300">
+                      {formatCurrency(total + (total > FREE_SHIPPING_THRESHOLD_USD ? 0 : STANDARD_SHIPPING_USD))}
+                    </span>
                   </div>
                 </div>
                 <Link

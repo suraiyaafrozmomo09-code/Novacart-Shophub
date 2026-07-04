@@ -21,11 +21,11 @@ import {
 
 const priceRanges = [
   { label: "All Prices", min: 0, max: Infinity },
-  { label: "Under $50", min: 0, max: 50 },
-  { label: "$50 - $100", min: 50, max: 100 },
-  { label: "$100 - $200", min: 100, max: 200 },
-  { label: "$200 - $500", min: 200, max: 500 },
-  { label: "Over $500", min: 500, max: Infinity },
+  { label: `Under ${formatCurrency(50)}`, min: 0, max: 50 },
+  { label: `${formatCurrency(50)} - ${formatCurrency(100)}`, min: 50, max: 100 },
+  { label: `${formatCurrency(100)} - ${formatCurrency(200)}`, min: 100, max: 200 },
+  { label: `${formatCurrency(200)} - ${formatCurrency(500)}`, min: 200, max: 500 },
+  { label: `Over ${formatCurrency(500)}`, min: 500, max: Infinity },
 ];
 
 function ProductsContent() {

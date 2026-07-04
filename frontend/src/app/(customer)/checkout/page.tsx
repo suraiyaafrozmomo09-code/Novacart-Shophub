@@ -9,7 +9,12 @@ import { SmartImage } from "@/components/ui/smart-image";
 import { useAuth } from "@/components/layout/supabase-provider";
 import type { CartItem, Address, Product, ProductVariant } from "@/types";
 import { cn } from "@/lib/utils";
-import { formatCurrency } from "@/lib/storefront";
+import {
+  FREE_SHIPPING_THRESHOLD_USD,
+  formatCurrency,
+  formatShippingLabel,
+  STANDARD_SHIPPING_USD,
+} from "@/lib/storefront";
 import { getProductDisplaySrc, getProductImagePrompt } from "@/lib/product-media";
 
 interface CheckoutCartRow {
@@ -100,7 +105,7 @@ export default function CheckoutPage() {
     const totalAmount = cartItems.reduce(
       (sum, item) => sum + (item.variant?.price || 0) * item.quantity,
       0
-    ) + (cartItems.reduce((sum, item) => sum + (item.variant?.price || 0) * item.quantity, 0) > 50 ? 0 : 5.99);
+    ) + (cartItems.reduce((sum, item) => sum + (item.variant?.price || 0) * item.quantity, 0) > FREE_SHIPPING_THRESHOLD_USD ? 0 : STANDARD_SHIPPING_USD);
 
     const { data: orderId, error: rpcError } = await supabase.rpc("place_order_from_cart", {
       p_shipping_address: shippingAddress,
@@ -162,7 +167,7 @@ export default function CheckoutPage() {
   };
 
   const subtotal = cartItems.reduce((sum, item) => sum + (item.variant?.price || 0) * item.quantity, 0);
-  const shipping = subtotal > 50 ? 0 : 5.99;
+  const shipping = subtotal > FREE_SHIPPING_THRESHOLD_USD ? 0 : STANDARD_SHIPPING_USD;
   const total = subtotal + shipping;
 
   if (!user) {
@@ -401,7 +406,7 @@ export default function CheckoutPage() {
                           <p className="text-sm font-medium text-white">{item.product?.name}</p>
                           <p className="text-xs text-white/45">Qty: {item.quantity}</p>
                         </div>
-                        <p className="text-sm font-semibold text-white">${((item.variant?.price || 0) * item.quantity).toFixed(2)}</p>
+                        <p className="text-sm font-semibold text-white">{formatCurrency((item.variant?.price || 0) * item.quantity)}</p>
                       </div>
                     ))}
                   </div>
@@ -434,11 +439,11 @@ export default function CheckoutPage() {
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-white/55">Subtotal ({cartItems.reduce((sum, i) => sum + i.quantity, 0)} items)</span>
-                  <span className="font-semibold text-white">${subtotal.toFixed(2)}</span>
+                  <span className="font-semibold text-white">{formatCurrency(subtotal)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-white/55">Shipping</span>
-                  <span className="font-semibold text-white">{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
+                  <span className="font-semibold text-white">{formatShippingLabel(shipping)}</span>
                 </div>
                 <hr className="my-3 border-white/8" />
                 <div className="flex justify-between text-lg">

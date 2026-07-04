@@ -55,8 +55,24 @@ export function getProductStock(product: ProductWithRelations) {
   return product.variants?.reduce((sum, variant) => sum + variant.quantity, 0) || 0;
 }
 
+export const USD_TO_BDT_RATE = 122;
+export const FREE_SHIPPING_THRESHOLD_USD = 50;
+export const STANDARD_SHIPPING_USD = 5.99;
+
+export function convertUsdToBdt(amount: number) {
+  return amount * USD_TO_BDT_RATE;
+}
+
 export function formatCurrency(amount: number) {
-  return `$${amount.toFixed(2)}`;
+  return new Intl.NumberFormat("en-BD", {
+    style: "currency",
+    currency: "BDT",
+    maximumFractionDigits: 0,
+  }).format(convertUsdToBdt(amount));
+}
+
+export function formatShippingLabel(amount: number) {
+  return amount === 0 ? "Free" : formatCurrency(amount);
 }
 
 export function productMatchesQuery(product: ProductWithRelations, query: string) {

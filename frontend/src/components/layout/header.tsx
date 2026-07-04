@@ -8,6 +8,7 @@ import { useAuth } from "@/components/layout/supabase-provider";
 import { supabase } from "@/lib/supabase";
 import {
   buildSearchSuggestions,
+  FREE_SHIPPING_THRESHOLD_USD,
   formatCurrency,
   type ProductWithRelations,
 } from "@/lib/storefront";
@@ -91,7 +92,7 @@ export function Header() {
         <div className="container mx-auto flex items-center justify-between px-4 py-2 text-[11px] uppercase tracking-[0.24em] text-white/55">
           <span>New season arrivals</span>
           <div className="hidden items-center gap-3 md:flex">
-            <span>Free shipping over $50</span>
+            <span>Free shipping over {formatCurrency(FREE_SHIPPING_THRESHOLD_USD)}</span>
             <ChevronRight size={12} />
             <span>Fast checkout</span>
           </div>

@@ -8,6 +8,7 @@ import { Package, ChevronRight, XCircle } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/layout/supabase-provider";
 import type { Order } from "@/types";
+import { formatCurrency } from "@/lib/storefront";
 import { cn } from "@/lib/utils";
 
 function OrdersContent() {
@@ -103,7 +104,7 @@ function OrdersContent() {
                     </span>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold text-slate-900">${order.total_amount.toFixed(2)}</p>
+                    <p className="font-bold text-slate-900">{formatCurrency(order.total_amount)}</p>
                     <p className="text-xs text-slate-500">{order.payment_method === "online" ? "Paid Online" : "Cash on Delivery"}</p>
                   </div>
                   <div className="flex gap-2">
