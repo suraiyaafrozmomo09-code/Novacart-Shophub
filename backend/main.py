@@ -1,198 +1,471 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
-from typing import List, Optional
-import json
+"""NovaCart Backend API — Hybrid Recommendation Engine & Behavior Analytics.
 
-app = FastAPI(title="ShopHub Backend API", description="Recommendation Engine & Analytics")
+Connects to Supabase (URL + anon key from .env) and serves:
+- Hybrid personalized recommendations (KNN + SVD + FP-Growth + PrefixSpan)
+- Product-page "frequently bought together"
+- Session-based recommendations for anonymous visitors
+- Behavioral event tracking (clicks, searches, sessions)
+- Offline evaluation (RMSE, Precision@K, Recall@K, NDCG, MAP, Hit Rate)
+"""
+
+from __future__ import annotations
+
+import logging
+import os
+from datetime import datetime, timezone
+from typing import Any, Optional
+
+from dotenv import load_dotenv
+from fastapi import FastAPI, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
+
+load_dotenv()
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("novacart.api")
+
+# ===========================================
+# SUPABASE CONNECTION
+# ===========================================
+
+SUPABASE_URL = os.getenv("SUPABASE_URL", "")
+SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY", "")
+
+supabase_client = None
+if SUPABASE_URL and SUPABASE_ANON_KEY:
+    try:
+        from supabase import create_client
+
+        supabase_client = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
+        logger.info("Connected to Supabase at %s", SUPABASE_URL)
+    except Exception as exc:  # pragma: no cover
+        logger.error("Supabase connection failed: %s", exc)
+else:
+    logger.warning("SUPABASE_URL / SUPABASE_ANON_KEY not set; running without database")
+
+# ===========================================
+# RECOMMENDER SETUP
+# ===========================================
+
+from recommender.data_loader import DataLoader
+from recommender.evaluation import Evaluator
+from recommender.hybrid_ensemble import DEFAULT_WEIGHTS, HybridRecommender
+
+data_loader: Optional[DataLoader] = DataLoader(supabase_client) if supabase_client else None
+hybrid: Optional[HybridRecommender] = HybridRecommender(data_loader) if data_loader else None
+evaluator: Optional[Evaluator] = Evaluator(data_loader) if data_loader else None
+
+app = FastAPI(
+    title="NovaCart Backend API",
+    description="Hybrid Recommendation Engine (KNN + SVD + FP-Growth + PrefixSpan) & Behavior Analytics",
+    version="2.0.0",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+def require_db():
+    if data_loader is None or hybrid is None:
+        raise HTTPException(status_code=503, detail="Supabase connection not configured")
+
+
+def now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def _clean(value: Any) -> Any:
+    """Convert pandas NaN/NA/NaT to None for JSON serialization."""
+    try:
+        import pandas as pd
+
+        if value is None or pd.isna(value):
+            return None
+    except (TypeError, ValueError):
+        pass
+    return value
+
+
+def enrich_products(entries: list[dict]) -> list[dict]:
+    """Attach product metadata (name, category, price, image) to scored ids."""
+    if not entries or data_loader is None:
+        return entries
+    products = data_loader.fetch_products()
+    variants = data_loader.fetch_variants()
+    product_map = (
+        {row["id"]: row for row in products.to_dict("records")} if not products.empty else {}
+    )
+    price_map: dict[str, Any] = {}
+    image_map: dict[str, Any] = {}
+    if not variants.empty:
+        for pid, group in variants.groupby("product_id"):
+            price_map[pid] = float(group["price"].min())
+            images = group["image"].dropna()
+            image_map[pid] = images.iloc[0] if not images.empty else None
+
+    enriched = []
+    for entry in entries:
+        pid = entry["product_id"]
+        meta = product_map.get(pid)
+        if meta is None:
+            continue  # inactive/deleted product
+        rating = _clean(meta.get("average_rating"))
+        enriched.append({
+            **entry,
+            "name": _clean(meta.get("name")),
+            "brand": _clean(meta.get("brand")),
+            "category": _clean(meta.get("category_name")),
+            "category_id": _clean(meta.get("category_id")),
+            "product_type": _clean(meta.get("product_type")),
+            "sub_type": _clean(meta.get("sub_type")),
+            "average_rating": float(rating) if rating is not None else None,
+            "price": price_map.get(pid, 0.0),  # BDT
+            "image": _clean(image_map.get(pid)),
+        })
+    return enriched
+
+
+def log_recommendations(
+    user_id: Optional[str],
+    session_id: Optional[str],
+    entries: list[dict],
+    weights: dict,
+) -> Optional[str]:
+    """Persist served recommendations; returns the log row id."""
+    if supabase_client is None or not entries:
+        return None
+    try:
+        resp = supabase_client.table("recommendation_logs").insert({
+            "user_id": user_id,
+            "session_id": session_id,
+            "recommended_product_ids": [e["product_id"] for e in entries],
+            "algorithm_weights": weights,
+            "served_at": now_iso(),
+        }).execute()
+        if resp.data:
+            return resp.data[0].get("id")
+    except Exception as exc:
+        logger.warning("Failed to log recommendations: %s", exc)
+    return None
+
 
 # ===========================================
 # PYDANTIC MODELS
 # ===========================================
 
-class Product(BaseModel):
-    id: str
-    name: str
-    category: str
-    product_type: str
-    sub_type: Optional[str] = None
-    gender: str
-    price: float
-    rating: float
-
-class SearchLog(BaseModel):
-    user_id: Optional[str] = None
-    query: str
-    results_count: int
-    timestamp: str
-
-class ClickEvent(BaseModel):
+class ClickEventIn(BaseModel):
     user_id: Optional[str] = None
     product_id: str
     variant_id: Optional[str] = None
-    event_type: str
-    timestamp: str
+    event_type: str = Field(pattern="^(view|click|add_to_cart|remove_from_cart|purchase|search_click|wishlist)$")
+    session_id: Optional[str] = None
 
-class RecommendationRequest(BaseModel):
+
+class SearchLogIn(BaseModel):
     user_id: Optional[str] = None
-    product_id: Optional[str] = None
-    method: str = "hybrid"
-    top_n: int = 10
+    query: str
+    results_count: int = 0
+    session_id: Optional[str] = None
+
+
+class SessionIn(BaseModel):
+    session_id: Optional[str] = None  # existing session UUID to close/update
+    user_id: Optional[str] = None
+    device_info: Optional[dict] = None
+    end_session: bool = False
+
+
+class FeedbackIn(BaseModel):
+    recommendation_log_id: Optional[str] = None
+    user_id: Optional[str] = None
+    session_id: Optional[str] = None
+    clicked_product_id: str
+
 
 # ===========================================
-# DUMMY DATA (Replace with Supabase)
-# ===========================================
-
-SAMPLE_PRODUCTS = [
-    {"id": "p1", "name": "Cotton Baby Romper", "category": "Baby Clothes", "product_type": "clothing", "sub_type": "romper", "gender": "unisex", "price": 25.99, "rating": 4.5},
-    {"id": "p2", "name": "Men's Formal Shirt", "category": "Men's Clothing", "product_type": "clothing", "sub_type": "shirt", "gender": "male", "price": 45.99, "rating": 4.2},
-    {"id": "p3", "name": "Women's Kurti", "category": "Women's Clothing", "product_type": "clothing", "sub_type": "kurti", "gender": "female", "price": 35.99, "rating": 4.7},
-    {"id": "p4", "name": "Men's Leather Loafer", "category": "Men's Shoes", "product_type": "shoes", "sub_type": "loafer", "gender": "male", "price": 89.99, "rating": 4.4},
-    {"id": "p5", "name": "Women's High Heel", "category": "Women's Shoes", "product_type": "shoes", "sub_type": "heel", "gender": "female", "price": 65.99, "rating": 4.3},
-    {"id": "p6", "name": "Smartphone Samsung S24", "category": "Electronics", "product_type": "electronics", "sub_type": "phone", "gender": "unisex", "price": 999.99, "rating": 4.8},
-    {"id": "p7", "name": "Wireless Headphones", "category": "Electronics", "product_type": "electronics", "sub_type": "headphones", "gender": "unisex", "price": 149.99, "rating": 4.6},
-    {"id": "p8", "name": "Men's Watch", "category": "Accessories", "product_type": "accessories", "sub_type": "watch", "gender": "male", "price": 199.99, "rating": 4.5},
-    {"id": "p9", "name": "Women's Perfume", "category": "Accessories", "product_type": "accessories", "sub_type": "perfume", "gender": "female", "price": 55.99, "rating": 4.4},
-    {"id": "p10", "name": "Power Bank 20000mAh", "category": "Electronics", "product_type": "electronics", "sub_type": "powerbank", "gender": "unisex", "price": 39.99, "rating": 4.3},
-]
-
-SEARCH_HISTORY = [
-    {"query": "iPhone 15", "results": 12},
-    {"query": "men t-shirt", "results": 45},
-    {"query": "wireless earbuds", "results": 23},
-]
-
-CLICK_HISTORY = [
-    {"product_id": "p6", "event_type": "view"},
-    {"product_id": "p7", "event_type": "click"},
-]
-
-# ===========================================
-# CONTENT-BASED FILTERING
-# ===========================================
-
-def content_based_recommendations(product_id: str, top_n: int = 10) -> List[dict]:
-    target = next((p for p in SAMPLE_PRODUCTS if p["id"] == product_id), None)
-    if not target:
-        return SAMPLE_PRODUCTS[:top_n]
-
-    def similarity_score(p: dict) -> float:
-        score = 0.0
-        if p["category"] == target["category"]:
-            score += 3.0
-        if p["product_type"] == target["product_type"]:
-            score += 2.0
-        if p["gender"] == target["gender"] or p["gender"] == "unisex" or target["gender"] == "unisex":
-            score += 1.0
-        score += p["rating"] * 0.5
-        return score
-
-    scored = [(p, similarity_score(p)) for p in SAMPLE_PRODUCTS if p["id"] != product_id]
-    scored.sort(key=lambda x: x[1], reverse=True)
-    return [p for p, s in scored[:top_n]]
-
-# ===========================================
-# COLLABORATIVE FILTERING (User-Based)
-# ===========================================
-
-def collaborative_filtering(user_id: Optional[str], top_n: int = 10) -> List[dict]:
-    # In production, replace with actual user-item matrix from Supabase
-    # Simulating similar user behavior
-    user_preferences = {
-        "u1": ["p6", "p7", "p10"],
-        "u2": ["p2", "p4", "p8"],
-        "u3": ["p3", "p5", "p9"],
-    }
-
-    similar_user_items = set()
-    if user_id and user_id in user_preferences:
-        for other_user, items in user_preferences.items():
-            if other_user != user_id:
-                similar_user_items.update(items)
-
-    return [p for p in SAMPLE_PRODUCTS if p["id"] in similar_user_items][:top_n]
-
-# ===========================================
-# HYBRID RECOMMENDATION
-# ===========================================
-
-def hybrid_recommendations(user_id: Optional[str], product_id: Optional[str], top_n: int = 10) -> List[dict]:
-    content_recs = content_based_recommendations(product_id or "p1", top_n * 2) if product_id else []
-    collab_recs = collaborative_filtering(user_id, top_n * 2)
-
-    scores = {}
-    for p in content_recs:
-        scores[p["id"]] = scores.get(p["id"], 0) + 0.6
-    for p in collab_recs:
-        scores[p["id"]] = scores.get(p["id"], 0) + 0.4
-
-    ranked = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-    return [next(p for p in SAMPLE_PRODUCTS if p["id"] == pid) for pid, _ in ranked[:top_n]]
-
-# ===========================================
-# API ENDPOINTS
+# CORE ENDPOINTS
 # ===========================================
 
 @app.get("/")
 def root():
-    return {"message": "ShopHub Backend API", "status": "running"}
+    return {
+        "message": "NovaCart Backend API",
+        "status": "running",
+        "database": "connected" if supabase_client else "not configured",
+        "algorithms": ["knn", "svd", "fp_growth", "prefixspan", "hybrid"],
+    }
+
 
 @app.get("/health")
 def health():
-    return {"status": "healthy"}
+    return {
+        "status": "healthy",
+        "supabase": supabase_client is not None,
+        "timestamp": now_iso(),
+    }
 
-@app.get("/recommendations")
-def get_recommendations(user_id: Optional[str] = None, product_id: Optional[str] = None, method: str = "hybrid", top_n: int = 10):
-    if method == "content":
-        return {"method": "content-based", "products": content_based_recommendations(product_id or "p1", top_n)}
-    elif method == "collaborative":
-        return {"method": "collaborative", "products": collaborative_filtering(user_id, top_n)}
-    else:
-        return {"method": "hybrid", "products": hybrid_recommendations(user_id, product_id, top_n)}
 
-@app.get("/recommendations/similar/{product_id}")
-def similar_products(product_id: str, top_n: int = 5):
-    return {"method": "content-based", "products": content_based_recommendations(product_id, top_n)}
+# ===========================================
+# RECOMMENDATION ENDPOINTS
+# ===========================================
 
-@app.get("/recommendations/user/{user_id}")
-def user_recommendations(user_id: str, top_n: int = 10):
-    return {"method": "collaborative", "products": collaborative_filtering(user_id, top_n)}
+@app.get("/api/recommendations/user/{user_id}")
+def user_recommendations(
+    user_id: str,
+    top_n: int = Query(10, ge=1, le=50),
+    include_explanation: bool = True,
+    session_id: Optional[str] = None,
+):
+    """Hybrid ensemble (KNN 0.25 + SVD 0.30 + FP-Growth 0.25 + PrefixSpan 0.20)."""
+    require_db()
+    try:
+        entries = hybrid.recommend_for_user(
+            user_id, top_n=top_n, session_id=session_id, include_breakdown=include_explanation
+        )
+        enriched = enrich_products(entries)
+        log_id = log_recommendations(user_id, session_id, enriched, hybrid.weights)
+        return {
+            "method": "hybrid",
+            "weights": hybrid.weights,
+            "user_id": user_id,
+            "recommendation_log_id": log_id,
+            "count": len(enriched),
+            "products": enriched,
+        }
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logger.exception("user_recommendations failed")
+        raise HTTPException(status_code=500, detail=str(exc))
 
-@app.get("/search-logs")
-def get_search_logs(limit: int = 100):
-    return {"logs": SEARCH_HISTORY[:limit], "total": len(SEARCH_HISTORY)}
 
-@app.post("/search-logs")
-def log_search(log: SearchLog):
-    SEARCH_HISTORY.append({"query": log.query, "results": log.results_count, "user_id": log.user_id, "timestamp": log.timestamp})
-    return {"status": "logged"}
+@app.get("/api/recommendations/product/{product_id}")
+def product_recommendations(product_id: str, top_n: int = Query(6, ge=1, le=30)):
+    """Item-based KNN + FP-Growth 'frequently bought together'."""
+    require_db()
+    try:
+        entries = hybrid.recommend_for_product(product_id, top_n=top_n)
+        enriched = enrich_products(entries)
+        return {
+            "method": "item_knn+fp_growth",
+            "product_id": product_id,
+            "count": len(enriched),
+            "products": enriched,
+        }
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logger.exception("product_recommendations failed")
+        raise HTTPException(status_code=500, detail=str(exc))
 
-@app.get("/click-events")
-def get_click_events(product_id: Optional[str] = None, limit: int = 100):
-    events = CLICK_HISTORY
-    if product_id:
-        events = [e for e in events if e["product_id"] == product_id]
-    return {"events": events[:limit], "total": len(events)}
 
-@app.post("/click-events")
-def log_click_event(event: ClickEvent):
-    CLICK_HISTORY.append({
-        "product_id": event.product_id,
-        "event_type": event.event_type,
-        "user_id": event.user_id,
-        "timestamp": event.timestamp
-    })
-    return {"status": "logged"}
+@app.get("/api/recommendations/session")
+def session_recommendations(
+    session_id: Optional[str] = None,
+    current_product_ids: Optional[str] = None,
+    top_n: int = Query(10, ge=1, le=50),
+):
+    """Session-based (PrefixSpan + FP-Growth) for anonymous visitors."""
+    require_db()
+    product_ids = [p.strip() for p in (current_product_ids or "").split(",") if p.strip()]
+    if not session_id and not product_ids:
+        raise HTTPException(status_code=422, detail="Provide session_id and/or current_product_ids")
+    try:
+        entries = hybrid.recommend_for_session(session_id, product_ids, top_n=top_n)
+        enriched = enrich_products(entries)
+        log_id = log_recommendations(None, session_id, enriched, {"prefixspan": 0.5, "fp_growth": 0.5})
+        return {
+            "method": "session:prefixspan+fp_growth",
+            "session_id": session_id,
+            "recommendation_log_id": log_id,
+            "count": len(enriched),
+            "products": enriched,
+        }
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logger.exception("session_recommendations failed")
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+@app.post("/api/recommendations/feedback")
+def recommendation_feedback(feedback: FeedbackIn):
+    """Record which served recommendation was clicked."""
+    require_db()
+    try:
+        if feedback.recommendation_log_id:
+            row = (
+                supabase_client.table("recommendation_logs")
+                .select("clicked_items")
+                .eq("id", feedback.recommendation_log_id)
+                .limit(1)
+                .execute()
+            )
+            clicked = (row.data[0].get("clicked_items") if row.data else None) or []
+            if feedback.clicked_product_id not in clicked:
+                clicked.append(feedback.clicked_product_id)
+            supabase_client.table("recommendation_logs").update({
+                "clicked_items": clicked,
+                "clicked_at": now_iso(),
+            }).eq("id", feedback.recommendation_log_id).execute()
+        # also record as a behavioral click event for the recommenders
+        _insert_with_fallback("click_events", {
+            "user_id": feedback.user_id,
+            "product_id": feedback.clicked_product_id,
+            "event_type": "click",
+            "session_id": feedback.session_id,
+            "created_at": now_iso(),
+        })
+        return {"status": "recorded"}
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logger.exception("recommendation_feedback failed")
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+# ===========================================
+# EVENT TRACKING ENDPOINTS
+# ===========================================
+
+def _insert_with_fallback(table: str, payload: dict[str, Any]) -> Any:
+    """Fire-and-forget event insert.
+
+    Uses returning='minimal' so RLS SELECT policies aren't required to read
+    back the row (search_logs is admin-read-only). If migration 013 isn't
+    applied yet (missing session_id column), retries without it."""
+    try:
+        return supabase_client.table(table).insert(payload, returning="minimal").execute()
+    except Exception as exc:
+        message = str(exc)
+        if "session_id" in message and "session_id" in payload:
+            trimmed = {k: v for k, v in payload.items() if k != "session_id"}
+            return supabase_client.table(table).insert(trimmed, returning="minimal").execute()
+        raise
+
+
+@app.post("/api/events/click")
+def track_click(event: ClickEventIn):
+    require_db()
+    try:
+        _insert_with_fallback("click_events", {
+            "user_id": event.user_id,
+            "product_id": event.product_id,
+            "variant_id": event.variant_id,
+            "event_type": event.event_type,
+            "session_id": event.session_id,
+            "created_at": now_iso(),
+        })
+        return {"status": "logged"}
+    except Exception as exc:
+        logger.warning("track_click failed: %s", exc)
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+@app.post("/api/events/search")
+def track_search(log: SearchLogIn):
+    require_db()
+    try:
+        _insert_with_fallback("search_logs", {
+            "user_id": log.user_id,
+            "query": log.query,
+            "results_count": log.results_count,
+            "session_id": log.session_id,
+            "created_at": now_iso(),
+        })
+        return {"status": "logged"}
+    except Exception as exc:
+        logger.warning("track_search failed: %s", exc)
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+@app.post("/api/events/session")
+def track_session(payload: SessionIn):
+    """Create a session, or close/attach a user to an existing one."""
+    require_db()
+    try:
+        if payload.session_id:
+            update: dict[str, Any] = {}
+            if payload.end_session:
+                update["session_end"] = now_iso()
+            if payload.user_id:
+                update["user_id"] = payload.user_id
+            if payload.device_info:
+                update["device_info"] = payload.device_info
+            if update:
+                supabase_client.table("user_sessions").update(update).eq(
+                    "id", payload.session_id
+                ).execute()
+            return {"status": "updated", "session_id": payload.session_id}
+        resp = supabase_client.table("user_sessions").insert({
+            "user_id": payload.user_id,
+            "session_start": now_iso(),
+            "device_info": payload.device_info,
+        }).execute()
+        session_id = resp.data[0]["id"] if resp.data else None
+        return {"status": "created", "session_id": session_id}
+    except Exception as exc:
+        logger.warning("track_session failed: %s", exc)
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+# ===========================================
+# EVALUATION ENDPOINT
+# ===========================================
+
+@app.get("/api/recommendations/evaluate")
+def evaluate_recommendations(user_id: Optional[str] = None):
+    """Offline evaluation on an 80/20 train/test split of the user-item matrix."""
+    require_db()
+    try:
+        results = evaluator.evaluate(user_id=user_id)
+        return {"evaluation": results, "weights": DEFAULT_WEIGHTS, "generated_at": now_iso()}
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logger.exception("evaluation failed")
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+# ===========================================
+# ADMIN / MAINTENANCE
+# ===========================================
+
+@app.post("/api/recommendations/refresh")
+def refresh_models():
+    """Clear caches and re-mine patterns on next request."""
+    require_db()
+    data_loader.invalidate_cache()
+    hybrid.fp_growth.refresh()
+    hybrid.prefixspan.refresh()
+    return {"status": "caches cleared"}
+
 
 @app.get("/analytics/summary")
 def analytics_summary():
-    return {
-        "total_products": len(SAMPLE_PRODUCTS),
-        "recommendation_methods": ["content-based", "collaborative", "hybrid"],
-        "total_searches": len(SEARCH_HISTORY),
-        "total_clicks": len(CLICK_HISTORY),
-        "categories": list({p["category"] for p in SAMPLE_PRODUCTS})
+    require_db()
+    summary: dict[str, Any] = {
+        "recommendation_methods": ["knn", "svd", "fp_growth", "prefixspan", "hybrid"],
+        "weights": DEFAULT_WEIGHTS,
     }
+    try:
+        products = data_loader.fetch_products()
+        summary["total_products"] = int(len(products))
+        interactions = data_loader.fetch_user_item_matrix(None)
+        summary["total_interactions"] = int(len(interactions))
+        summary["unique_users"] = int(interactions["user_id"].nunique()) if not interactions.empty else 0
+    except Exception as exc:
+        summary["warning"] = str(exc)
+    return summary
+
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

@@ -121,6 +121,7 @@ export default function AdminProductsPage() {
                             src={getProductDisplaySrc(product, product.variants?.[0])}
                             alt=""
                             fallbackPrompt={getProductImagePrompt(product, product.variants?.[0])}
+                            fallbackSrc={getProductDisplaySrc(product)}
                             imageSize="square"
                             className="w-full h-full object-cover"
                           />

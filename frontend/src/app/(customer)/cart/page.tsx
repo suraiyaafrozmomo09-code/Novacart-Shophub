@@ -13,10 +13,10 @@ import { getProductDisplaySrc, getProductImagePrompt } from "@/lib/product-media
 import {
   buildCartSeedProducts,
   buildRecommendations,
-  FREE_SHIPPING_THRESHOLD_USD,
+  FREE_SHIPPING_THRESHOLD,
   formatCurrency,
   formatShippingLabel,
-  STANDARD_SHIPPING_USD,
+  STANDARD_SHIPPING,
   type ProductWithRelations,
 } from "@/lib/storefront";
 
@@ -166,6 +166,7 @@ export default function CartPage() {
                       src={getProductDisplaySrc(item.product as ProductWithRelations, item.variant)}
                       alt={item.product?.name}
                       fallbackPrompt={getProductImagePrompt(item.product as ProductWithRelations, item.variant)}
+                      fallbackSrc={getProductDisplaySrc(item.product as ProductWithRelations)}
                       imageSize="square"
                       className="w-full h-full object-cover"
                     />
@@ -224,14 +225,14 @@ export default function CartPage() {
                   <div className="flex justify-between">
                     <span className="text-white/55">Shipping</span>
                     <span className="font-semibold text-white">
-                      {formatShippingLabel(total > FREE_SHIPPING_THRESHOLD_USD ? 0 : STANDARD_SHIPPING_USD)}
+                      {formatShippingLabel(total > FREE_SHIPPING_THRESHOLD ? 0 : STANDARD_SHIPPING)}
                     </span>
                   </div>
                   <hr className="my-3 border-white/8" />
                   <div className="flex justify-between text-lg">
                     <span className="font-bold text-white">Total</span>
                     <span className="font-bold text-fuchsia-300">
-                      {formatCurrency(total + (total > FREE_SHIPPING_THRESHOLD_USD ? 0 : STANDARD_SHIPPING_USD))}
+                      {formatCurrency(total + (total > FREE_SHIPPING_THRESHOLD ? 0 : STANDARD_SHIPPING))}
                     </span>
                   </div>
                 </div>

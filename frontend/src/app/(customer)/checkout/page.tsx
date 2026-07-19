@@ -10,10 +10,10 @@ import { useAuth } from "@/components/layout/supabase-provider";
 import type { CartItem, Address, Product, ProductVariant } from "@/types";
 import { cn } from "@/lib/utils";
 import {
-  FREE_SHIPPING_THRESHOLD_USD,
+  FREE_SHIPPING_THRESHOLD,
   formatCurrency,
   formatShippingLabel,
-  STANDARD_SHIPPING_USD,
+  STANDARD_SHIPPING,
 } from "@/lib/storefront";
 import { getProductDisplaySrc, getProductImagePrompt } from "@/lib/product-media";
 
@@ -105,7 +105,7 @@ export default function CheckoutPage() {
     const totalAmount = cartItems.reduce(
       (sum, item) => sum + (item.variant?.price || 0) * item.quantity,
       0
-    ) + (cartItems.reduce((sum, item) => sum + (item.variant?.price || 0) * item.quantity, 0) > FREE_SHIPPING_THRESHOLD_USD ? 0 : STANDARD_SHIPPING_USD);
+    ) + (cartItems.reduce((sum, item) => sum + (item.variant?.price || 0) * item.quantity, 0) > FREE_SHIPPING_THRESHOLD ? 0 : STANDARD_SHIPPING);
 
     const { data: orderId, error: rpcError } = await supabase.rpc("place_order_from_cart", {
       p_shipping_address: shippingAddress,
@@ -167,7 +167,7 @@ export default function CheckoutPage() {
   };
 
   const subtotal = cartItems.reduce((sum, item) => sum + (item.variant?.price || 0) * item.quantity, 0);
-  const shipping = subtotal > FREE_SHIPPING_THRESHOLD_USD ? 0 : STANDARD_SHIPPING_USD;
+  const shipping = subtotal > FREE_SHIPPING_THRESHOLD ? 0 : STANDARD_SHIPPING;
   const total = subtotal + shipping;
 
   if (!user) {
@@ -398,6 +398,7 @@ export default function CheckoutPage() {
                             src={getProductDisplaySrc(item.product || {}, item.variant)}
                             alt={item.product?.name || "Checkout item"}
                             fallbackPrompt={getProductImagePrompt(item.product || {}, item.variant)}
+                            fallbackSrc={getProductDisplaySrc(item.product || {})}
                             imageSize="square"
                             className="w-full h-full object-cover"
                           />

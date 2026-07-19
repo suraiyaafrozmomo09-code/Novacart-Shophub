@@ -1,0 +1,191 @@
+digraph NovaCart_ERD {
+	edge [arrowhead=crow dir=forward]
+	bgcolor="#FFFFFF" dpi=200 fontname=Arial fontsize=10 margin=0.3 pad=0.5 rankdir=LR splines=ortho
+	node [fontname=Arial fontsize=9 shape=record style="filled,rounded"]
+	users [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+      <TR><TD BGCOLOR="#1A237E"><FONT COLOR="white" POINT-SIZE="10"><B>users</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#E8F0FE">🔑 id (UUID)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E8F0FE">email (TEXT) UNIQUE</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E8F0FE">full_name (TEXT)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E8F0FE">phone (TEXT)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E8F0FE">role (TEXT) customer | admin</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E8F0FE">created_at (TIMESTAMPTZ)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E8F0FE">updated_at (TIMESTAMPTZ)</TD></TR>
+
+    </TABLE>
+    >]
+	categories [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+      <TR><TD BGCOLOR="#1A237E"><FONT COLOR="white" POINT-SIZE="10"><B>categories</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">🔑 id (UUID)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">name (TEXT)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">slug (TEXT) UNIQUE</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">description (TEXT)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">image (TEXT)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">🔗 parent_id → categories.id</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">created_at (TIMESTAMPTZ)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">updated_at (TIMESTAMPTZ)</TD></TR>
+
+    </TABLE>
+    >]
+	products [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+      <TR><TD BGCOLOR="#1A237E"><FONT COLOR="white" POINT-SIZE="10"><B>products</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">🔑 id (UUID)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">product_code (TEXT) UNIQUE</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">name (TEXT)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">description (TEXT)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">🔗 category_id → categories.id</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">brand (TEXT)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">status (TEXT) active | inactive</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">gender (TEXT) male | female | unisex</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">product_type (TEXT)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">sub_type (TEXT)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">average_rating (NUMERIC)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">review_count (INTEGER)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">created_at (TIMESTAMPTZ)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">updated_at (TIMESTAMPTZ)</TD></TR>
+
+    </TABLE>
+    >]
+	product_variants [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+      <TR><TD BGCOLOR="#1A237E"><FONT COLOR="white" POINT-SIZE="10"><B>product_variants</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">🔑 id (UUID)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">🔗 product_id → products.id</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">size (TEXT)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">color (TEXT)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">price (NUMERIC)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">quantity (INTEGER)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">sku (TEXT) UNIQUE</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">image (TEXT)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">created_at (TIMESTAMPTZ)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#E6F4EA">updated_at (TIMESTAMPTZ)</TD></TR>
+
+    </TABLE>
+    >]
+	cart [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+      <TR><TD BGCOLOR="#1A237E"><FONT COLOR="white" POINT-SIZE="10"><B>cart</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#FFF3E0">🔑 id (UUID)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFF3E0">🔗 user_id → users.id</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFF3E0">🔗 variant_id → product_variants.id</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFF3E0">quantity (INTEGER)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFF3E0">created_at (TIMESTAMPTZ)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFF3E0">updated_at (TIMESTAMPTZ)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFF3E0">UNIQUE(user_id, variant_id)</TD></TR>
+
+    </TABLE>
+    >]
+	orders [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+      <TR><TD BGCOLOR="#1A237E"><FONT COLOR="white" POINT-SIZE="10"><B>orders</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#FFF3E0">🔑 id (UUID)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFF3E0">🔗 user_id → users.id</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFF3E0">total_amount (NUMERIC)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFF3E0">status (TEXT)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFF3E0">payment_method (TEXT)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFF3E0">payment_status (TEXT)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFF3E0">shipping_address (JSONB)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFF3E0">created_at (TIMESTAMPTZ)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFF3E0">updated_at (TIMESTAMPTZ)</TD></TR>
+
+    </TABLE>
+    >]
+	order_items [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+      <TR><TD BGCOLOR="#1A237E"><FONT COLOR="white" POINT-SIZE="10"><B>order_items</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#FFF3E0">🔑 id (UUID)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFF3E0">🔗 order_id → orders.id</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFF3E0">🔗 product_id → products.id</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFF3E0">🔗 variant_id → product_variants.id</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFF3E0">quantity (INTEGER)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFF3E0">price (NUMERIC)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFF3E0">created_at (TIMESTAMPTZ)</TD></TR>
+
+    </TABLE>
+    >]
+	payments [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+      <TR><TD BGCOLOR="#1A237E"><FONT COLOR="white" POINT-SIZE="10"><B>payments</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#FFEBEE">🔑 id (UUID)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFEBEE">🔗 order_id → orders.id</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFEBEE">🔗 user_id → users.id</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFEBEE">amount (NUMERIC)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFEBEE">method (TEXT)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFEBEE">status (TEXT)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFEBEE">transaction_id (TEXT)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#FFEBEE">created_at (TIMESTAMPTZ)</TD></TR>
+
+    </TABLE>
+    >]
+	reviews [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+      <TR><TD BGCOLOR="#1A237E"><FONT COLOR="white" POINT-SIZE="10"><B>reviews</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">🔑 id (UUID)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">🔗 product_id → products.id</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">🔗 user_id → users.id</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">rating (INTEGER) 1-5</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">comment (TEXT)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">language (TEXT)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">created_at (TIMESTAMPTZ)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">updated_at (TIMESTAMPTZ)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">UNIQUE(product_id, user_id)</TD></TR>
+
+    </TABLE>
+    >]
+	search_logs [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+      <TR><TD BGCOLOR="#1A237E"><FONT COLOR="white" POINT-SIZE="10"><B>search_logs</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">🔑 id (UUID)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">🔗 user_id → users.id</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">query (TEXT)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">results_count (INTEGER)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">created_at (TIMESTAMPTZ)</TD></TR>
+
+    </TABLE>
+    >]
+	click_events [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+      <TR><TD BGCOLOR="#1A237E"><FONT COLOR="white" POINT-SIZE="10"><B>click_events</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">🔑 id (UUID)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">🔗 user_id → users.id</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">🔗 product_id → products.id</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">🔗 variant_id → product_variants.id</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">event_type (TEXT)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">created_at (TIMESTAMPTZ)</TD></TR>
+
+    </TABLE>
+    >]
+	wishlist [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+      <TR><TD BGCOLOR="#1A237E"><FONT COLOR="white" POINT-SIZE="10"><B>wishlist</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">🔑 id (UUID)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">🔗 user_id → users.id</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">🔗 product_id → products.id</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">created_at (TIMESTAMPTZ)</TD></TR>
+<TR><TD ALIGN="LEFT" BGCOLOR="#F3E5F5">UNIQUE(user_id, product_id)</TD></TR>
+
+    </TABLE>
+    >]
+	categories -> categories [label=" parent_id" arrowhead=none color="#546E7A" penwidth=1.5 style=dashed]
+	categories -> products [label=" 1        *" arrowhead=none color="#546E7A" penwidth=1.5]
+	products -> product_variants [label=" 1        *" arrowhead=none color="#546E7A" penwidth=1.5]
+	users -> cart [label=" 1        *" arrowhead=none color="#546E7A" penwidth=1.5]
+	product_variants -> cart [label=" 1        *" arrowhead=none color="#546E7A" penwidth=1.5]
+	users -> orders [label=" 1        *" arrowhead=none color="#546E7A" penwidth=1.5]
+	orders -> order_items [label=" 1        *" arrowhead=none color="#546E7A" penwidth=1.5]
+	products -> order_items [label=" 1        *" arrowhead=none color="#546E7A" penwidth=1.5]
+	product_variants -> order_items [label=" 1        *" arrowhead=none color="#546E7A" penwidth=1.5]
+	orders -> payments [label=" 1        1" arrowhead=none color="#546E7A" penwidth=1.5]
+	users -> payments [label=" 1        *" arrowhead=none color="#546E7A" penwidth=1.5]
+	products -> reviews [label=" 1        *" arrowhead=none color="#546E7A" penwidth=1.5]
+	users -> reviews [label=" 1        *" arrowhead=none color="#546E7A" penwidth=1.5]
+	users -> search_logs [label=" 1        *" arrowhead=none color="#546E7A" penwidth=1.5]
+	users -> click_events [label=" 1        *" arrowhead=none color="#546E7A" penwidth=1.5]
+	products -> click_events [label=" 1        *" arrowhead=none color="#546E7A" penwidth=1.5]
+	product_variants -> click_events [label=" 1        *" arrowhead=none color="#546E7A" penwidth=1.5]
+	users -> wishlist [label=" 1        *" arrowhead=none color="#546E7A" penwidth=1.5]
+	products -> wishlist [label=" 1        *" arrowhead=none color="#546E7A" penwidth=1.5]
+}

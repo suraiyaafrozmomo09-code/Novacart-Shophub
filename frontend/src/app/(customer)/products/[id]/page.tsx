@@ -11,8 +11,9 @@ import { cn } from "@/lib/utils";
 import type { ProductVariant, Review, ReviewLanguage } from "@/types";
 import RecommendationSection from "@/components/products/recommendation-section";
 import { getProductDisplayId, getProductDisplaySrc, getProductImagePrompt } from "@/lib/product-media";
+import { trackEvent } from "@/lib/track";
 import {
-  FREE_SHIPPING_THRESHOLD_USD,
+  FREE_SHIPPING_THRESHOLD,
   formatCurrency,
   getProductStock,
   type ProductWithRelations,
@@ -113,6 +114,13 @@ export default function ProductDetailPage() {
       setSelectedVariant(data.variants?.[0] || null);
       setReviews((reviewRows || []) as ProductReview[]);
       setLoading(false);
+
+      // Log the product view for the recommendation engine
+      trackEvent("view", {
+        productId: resolvedProduct.id,
+        variantId: data.variants?.[0]?.id ?? null,
+        userId: user?.id ?? null,
+      });
     };
 
     void loadProduct();
@@ -148,6 +156,12 @@ export default function ProductDetailPage() {
       setFeedback("We couldn't add this item to your cart. Please make sure the latest database migration is applied.");
     } else {
       setFeedback(`${product.name} was added to your cart.`);
+      // Log add-to-cart for the recommendation engine
+      trackEvent("add_to_cart", {
+        productId: product.id,
+        variantId: selectedVariant.id,
+        userId: user.id,
+      });
     }
     
     setAddingToCart(false);
@@ -250,6 +264,7 @@ export default function ProductDetailPage() {
                   src={getProductDisplaySrc(product, selectedVariant || product.variants?.[0])}
                   alt={product.name}
                   fallbackPrompt={getProductImagePrompt(product, selectedVariant || product.variants?.[0])}
+                  fallbackSrc={getProductDisplaySrc(product)}
                   imageSize="square"
                   className="w-full h-full object-cover"
                 />
@@ -275,6 +290,7 @@ export default function ProductDetailPage() {
                         src={getProductDisplaySrc(product, v)}
                         alt={`${product.name} variant`}
                         fallbackPrompt={getProductImagePrompt(product, v)}
+                        fallbackSrc={getProductDisplaySrc(product)}
                         imageSize="square"
                         className="aspect-square h-full w-full object-cover"
                       />
@@ -405,7 +421,7 @@ export default function ProductDetailPage() {
                     Delivery promise
                   </div>
                   <p className="mt-2 text-sm text-white/58">
-                    Orders above {formatCurrency(FREE_SHIPPING_THRESHOLD_USD)} qualify for free shipping. Admin can review each order status from the dashboard after checkout.
+                    Orders above {formatCurrency(FREE_SHIPPING_THRESHOLD)} qualify for free shipping. Admin can review each order status from the dashboard after checkout.
                   </p>
                   <div className="flex items-center gap-2 text-sm font-semibold text-white">
                     <ShieldCheck size={16} className="text-white/68" />

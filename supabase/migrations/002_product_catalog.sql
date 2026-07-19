@@ -130,42 +130,67 @@ BEGIN
   END IF;
 END $$;
 
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM products WHERE name = 'Baby Cotton Leggings') THEN
+    INSERT INTO products (name, description, category_id, brand, status, gender, product_type, sub_type, average_rating, review_count)
+    SELECT 'Baby Cotton Leggings', 'Soft stretchy cotton leggings for comfortable playtime', id, 'BabySoft', 'active', 'unisex', 'baby-clothes', NULL, 4.8, 15
+    FROM categories WHERE slug = 'baby-clothes';
+  END IF;
+END $$;
+
 -- Baby Cotton Onesie variants
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, '0-3M', 'Pink', 10.99, 50, 'BABY-ONESIE-001', 'https://images.unsplash.com/photo-1522775335684-37898b6baf30?w=400&h=400&fit=crop'
+SELECT p.id, '0-3M', 'Pink', 350, 50, 'BABY-ONESIE-001', 'https://images.unsplash.com/photo-1522775335684-37898b6baf30?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Baby Cotton Onesie'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, '0-3M', 'Blue', 10.99, 40, 'BABY-ONESIE-002', 'https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=400&h=400&fit=crop'
+SELECT p.id, '0-3M', 'Blue', 350, 40, 'BABY-ONESIE-002', 'https://images.unsplash.com/photo-1522775335684-37898b6baf30?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Baby Cotton Onesie'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, '0-6M', 'White', 12.99, 45, 'BABY-ONESIE-003', 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=400&fit=crop'
+SELECT p.id, '0-6M', 'White', 400, 45, 'BABY-ONESIE-003', 'https://images.unsplash.com/photo-1522775335684-37898b6baf30?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Baby Cotton Onesie'
 ON CONFLICT (sku) DO NOTHING;
 
 -- Baby Romper Suit variants
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, '0-6M', 'Yellow', 12.99, 35, 'BABY-ROMPER-001', 'https://images.unsplash.com/photo-1522775335684-37898b6baf30?w=400&h=400&fit=crop'
+SELECT p.id, '0-6M', 'Yellow', 450, 35, 'BABY-ROMPER-001', 'https://images.unsplash.com/photo-1597514660025-1959f53b1f4b?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Baby Romper Suit'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, '6-12M', 'White', 18.99, 25, 'BABY-ROMPER-002', 'https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=400&h=400&fit=crop'
+SELECT p.id, '6-12M', 'White', 550, 25, 'BABY-ROMPER-002', 'https://images.unsplash.com/photo-1597514660025-1959f53b1f4b?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Baby Romper Suit'
 ON CONFLICT (sku) DO NOTHING;
 
 -- Baby Winter Jacket variants
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, '6-12M', 'Navy', 22.99, 20, 'BABY-JACKET-001', 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=400&fit=crop'
+SELECT p.id, '6-12M', 'Navy', 750, 20, 'BABY-JACKET-001', 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Baby Winter Jacket'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, '12-18M', 'Grey', 26.99, 15, 'BABY-JACKET-002', 'https://images.unsplash.com/photo-1522775335684-37898b6baf30?w=400&h=400&fit=crop'
+SELECT p.id, '12-18M', 'Grey', 850, 15, 'BABY-JACKET-002', 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Baby Winter Jacket'
+ON CONFLICT (sku) DO NOTHING;
+
+-- Baby Cotton Leggings variants
+INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
+SELECT p.id, '0-6M', 'White', 350, 40, 'BABY-LEGG-001', 'https://images.unsplash.com/photo-1519238263532-9c9e6e6e6e6e?w=400&h=400&fit=crop'
+FROM products p WHERE p.name = 'Baby Cotton Leggings'
+ON CONFLICT (sku) DO NOTHING;
+
+INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
+SELECT p.id, '6-12M', 'Grey', 400, 35, 'BABY-LEGG-002', 'https://images.unsplash.com/photo-1519238263532-9c9e6e6e6e6e?w=400&h=400&fit=crop'
+FROM products p WHERE p.name = 'Baby Cotton Leggings'
+ON CONFLICT (sku) DO NOTHING;
+
+INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
+SELECT p.id, '12-18M', 'Navy', 450, 30, 'BABY-LEGG-003', 'https://images.unsplash.com/photo-1519238263532-9c9e6e6e6e6e?w=400&h=400&fit=crop'
+FROM products p WHERE p.name = 'Baby Cotton Leggings'
 ON CONFLICT (sku) DO NOTHING;
 
 -- ===========================================
@@ -192,22 +217,22 @@ END $$;
 
 -- Shirt variants
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, 'M', 'White', 29.99, 45, 'MSHIRT-001', 'https://images.unsplash.com/photo-1603257395605-2cc1ada02745?w=400&h=400&fit=crop'
+SELECT p.id, 'M', 'White', 1200, 45, 'MSHIRT-001', 'https://images.unsplash.com/photo-1603257395605-2cc1ada02745?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Classic Cotton Shirt'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, 'L', 'White', 29.99, 50, 'MSHIRT-002', 'https://images.unsplash.com/photo-1603257395605-2cc1ada02745?w=400&h=400&fit=crop'
+SELECT p.id, 'L', 'White', 1200, 50, 'MSHIRT-002', 'https://images.unsplash.com/photo-1603257395605-2cc1ada02745?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Classic Cotton Shirt'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, 'XL', 'Light Blue', 32.99, 35, 'MSHIRT-003', 'https://images.unsplash.com/photo-1594954767700-628f0f040a6c?w=400&h=400&fit=crop'
+SELECT p.id, 'XL', 'Light Blue', 1350, 35, 'MSHIRT-003', 'https://images.unsplash.com/photo-1594954767700-628f0f040a6c?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Classic Cotton Shirt'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, 'M', 'Red/Black', 34.99, 30, 'MSHIRT-004', 'https://images.unsplash.com/photo-1594954767700-628f0f040a6c?w=400&h=400&fit=crop'
+SELECT p.id, 'M', 'Red/Black', 1500, 30, 'MSHIRT-004', 'https://images.unsplash.com/photo-1594954767700-628f0f040a6c?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Flannel Check Shirt'
 ON CONFLICT (sku) DO NOTHING;
 
@@ -225,17 +250,17 @@ BEGIN
 END $$;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, 'S', 'White', 14.99, 100, 'MTEE-001', 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop'
+SELECT p.id, 'S', 'White', 550, 100, 'MTEE-001', 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Premium Cotton T-Shirt'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, 'M', 'White', 14.99, 120, 'MTEE-002', 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop'
+SELECT p.id, 'M', 'White', 550, 120, 'MTEE-002', 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Premium Cotton T-Shirt'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, 'L', 'Black', 16.99, 80, 'MTEE-003', 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=400&h=400&fit=crop'
+SELECT p.id, 'L', 'Black', 650, 80, 'MTEE-003', 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Premium Cotton T-Shirt'
 ON CONFLICT (sku) DO NOTHING;
 
@@ -253,17 +278,17 @@ BEGIN
 END $$;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, 'M', 'White', 39.99, 30, 'MPANJ-001', 'https://images.unsplash.com/photo-1620012253295-c15cc3e65d4c?w=400&h=400&fit=crop'
+SELECT p.id, 'M', 'White', 2200, 30, 'MPANJ-001', 'https://images.unsplash.com/photo-1620012253295-c15cc3e65d4c?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Traditional Cotton Panjabi'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, 'L', 'White', 39.99, 25, 'MPANJ-002', 'https://images.unsplash.com/photo-1620012253295-c15cc3e65d4c?w=400&h=400&fit=crop'
+SELECT p.id, 'L', 'White', 2200, 25, 'MPANJ-002', 'https://images.unsplash.com/photo-1620012253295-c15cc3e65d4c?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Traditional Cotton Panjabi'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, 'XL', 'Cream', 45.99, 20, 'MPANJ-003', 'https://images.unsplash.com/photo-1617123151875-0adda5efbf3b?w=400&h=400&fit=crop'
+SELECT p.id, 'XL', 'Cream', 2800, 20, 'MPANJ-003', 'https://images.unsplash.com/photo-1617123151875-0adda5efbf3b?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Traditional Cotton Panjabi'
 ON CONFLICT (sku) DO NOTHING;
 
@@ -290,12 +315,12 @@ BEGIN
 END $$;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, '30', 'Khaki', 34.99, 40, 'MPANTS-001', 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=400&h=400&fit=crop'
+SELECT p.id, '30', 'Khaki', 1600, 40, 'MPANTS-001', 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Slim Fit Chinos'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, '32', 'Khaki', 34.99, 45, 'MPANTS-002', 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=400&h=400&fit=crop'
+SELECT p.id, '32', 'Khaki', 1600, 45, 'MPANTS-002', 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Slim Fit Chinos'
 ON CONFLICT (sku) DO NOTHING;
 
@@ -313,7 +338,7 @@ BEGIN
 END $$;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, 'M', 'Khaki', 19.99, 50, 'MSHORT-001', 'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=400&h=400&fit=crop'
+SELECT p.id, 'M', 'Khaki', 750, 50, 'MSHORT-001', 'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Casual Cotton Shorts'
 ON CONFLICT (sku) DO NOTHING;
 
@@ -331,7 +356,7 @@ BEGIN
 END $$;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, 'S', 'Pink', 22.99, 40, 'WKURTI-001', 'https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?w=400&h=400&fit=crop'
+SELECT p.id, 'S', 'Pink', 1200, 40, 'WKURTI-001', 'https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Embroidered Cotton Kurti'
 ON CONFLICT (sku) DO NOTHING;
 
@@ -349,7 +374,7 @@ BEGIN
 END $$;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, 'S', 'Multi', 15.99, 60, 'WTOP-001', 'https://images.unsplash.com/photo-1564257631407-4deb1f99d992?w=400&h=400&fit=crop'
+SELECT p.id, 'S', 'Multi', 650, 60, 'WTOP-001', 'https://images.unsplash.com/photo-1564257631407-4deb1f99d992?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Casual Printed Top'
 ON CONFLICT (sku) DO NOTHING;
 
@@ -367,7 +392,7 @@ BEGIN
 END $$;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, 'S', 'Maroon', 35.99, 25, 'W2PCE-001', 'https://images.unsplash.com/photo-1610030181423-929793d43147?w=400&h=400&fit=crop'
+SELECT p.id, 'S', 'Maroon', 2800, 25, 'W2PCE-001', 'https://images.unsplash.com/photo-1610030181423-929793d43147?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Designer Two Piece Set'
 ON CONFLICT (sku) DO NOTHING;
 
@@ -394,7 +419,7 @@ BEGIN
 END $$;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, 'One Size', 'Brown/Black', 59.99, 50, 'MWATCH-001', 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=400&h=400&fit=crop'
+SELECT p.id, 'One Size', 'Brown/Black', 5000, 50, 'MWATCH-001', 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Classic Analog Watch'
 ON CONFLICT (sku) DO NOTHING;
 
@@ -412,7 +437,7 @@ BEGIN
 END $$;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, '100ml', NULL, 34.99, 60, 'MPERF-001', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop'
+SELECT p.id, '100ml', NULL, 2500, 60, 'MPERF-001', 'https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Premium Men''s Perfume'
 ON CONFLICT (sku) DO NOTHING;
 
@@ -430,7 +455,7 @@ BEGIN
 END $$;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, '256GB', 'Natural Titanium', 1199.99, 25, 'IPHONE-001', 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400&h=400&fit=crop'
+SELECT p.id, '256GB', 'Natural Titanium', 65000, 25, 'IPHONE-001', 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'iPhone 15 Pro Max'
 ON CONFLICT (sku) DO NOTHING;
 
@@ -448,6 +473,6 @@ BEGIN
 END $$;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, 'Standard', 'Black', 14.99, 60, 'MOUSE-001', 'https://images.unsplash.com/photo-1615664610493-559c4c0b1c5c?w=400&h=400&fit=crop'
+SELECT p.id, 'Standard', 'Black', 800, 60, 'MOUSE-001', 'https://images.unsplash.com/photo-1615664610493-559c4c0b1c5c?w=400&h=400&fit=crop'
 FROM products p WHERE p.name = 'Wireless Mouse'
 ON CONFLICT (sku) DO NOTHING;

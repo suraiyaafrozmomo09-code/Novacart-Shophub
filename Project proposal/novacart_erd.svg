@@ -1,0 +1,329 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 870 1168" width="870" height="1168">
+<defs>
+<filter id="shadow"><feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.15"/></filter>
+</defs>
+<rect width="870" height="1168" fill="#F8F9FA"/>
+<path d="M 270 269 C 300 254, 300 294, 270 294" fill="none" stroke="#78909C" stroke-width="1.5" stroke-dasharray="5,3"/>
+<text x="305" y="281" font-family="Arial" font-size="8" fill="#546E7A" text-anchor="middle">parent_id</text>
+<path d="M 270 358 L 155 358 L 155 655 L 40 655" fill="none" stroke="#546E7A" stroke-width="1.5" stroke-dasharray="none"/>
+<polyline points="40,655 32,650 32,660 40,655" fill="#546E7A"/>
+<path d="M 270 655 L 155 655 L 155 972 L 40 972" fill="none" stroke="#546E7A" stroke-width="1.5" stroke-dasharray="none"/>
+<polyline points="40,972 32,967 32,977 40,972" fill="#546E7A"/>
+<path d="M 270 131 L 295 131 L 295 121 L 320 121" fill="none" stroke="#546E7A" stroke-width="1.5" stroke-dasharray="none"/>
+<polyline points="320,121 312,116 312,126 320,121" fill="#546E7A"/>
+<path d="M 270 972 L 295 972 L 295 121 L 320 121" fill="none" stroke="#546E7A" stroke-width="1.5" stroke-dasharray="none"/>
+<polyline points="320,121 312,116 312,126 320,121" fill="#546E7A"/>
+<path d="M 270 131 L 295 131 L 295 348 L 320 348" fill="none" stroke="#546E7A" stroke-width="1.5" stroke-dasharray="none"/>
+<polyline points="320,348 312,343 312,353 320,348" fill="#546E7A"/>
+<path d="M 550 348 L 435 348 L 435 585 L 320 585" fill="none" stroke="#546E7A" stroke-width="1.5" stroke-dasharray="none"/>
+<polyline points="320,585 312,580 312,590 320,585" fill="#546E7A"/>
+<path d="M 270 655 L 295 655 L 295 585 L 320 585" fill="none" stroke="#546E7A" stroke-width="1.5" stroke-dasharray="none"/>
+<polyline points="320,585 312,580 312,590 320,585" fill="#546E7A"/>
+<path d="M 270 972 L 295 972 L 295 585 L 320 585" fill="none" stroke="#546E7A" stroke-width="1.5" stroke-dasharray="none"/>
+<polyline points="320,585 312,580 312,590 320,585" fill="#546E7A"/>
+<path d="M 550 348 L 435 348 L 435 812 L 320 812" fill="none" stroke="#546E7A" stroke-width="1.5" stroke-dasharray="none"/>
+<polyline points="320,812 312,807 312,817 320,812" fill="#546E7A"/>
+<path d="M 270 131 L 295 131 L 295 812 L 320 812" fill="none" stroke="#546E7A" stroke-width="1.5" stroke-dasharray="none"/>
+<polyline points="320,812 312,807 312,817 320,812" fill="#546E7A"/>
+<path d="M 270 655 L 435 655 L 435 141 L 600 141" fill="none" stroke="#546E7A" stroke-width="1.5" stroke-dasharray="none"/>
+<polyline points="600,141 592,136 592,146 600,141" fill="#546E7A"/>
+<path d="M 270 131 L 435 131 L 435 141 L 600 141" fill="none" stroke="#546E7A" stroke-width="1.5" stroke-dasharray="none"/>
+<polyline points="600,141 592,136 592,146 600,141" fill="#546E7A"/>
+<path d="M 270 131 L 435 131 L 435 348 L 600 348" fill="none" stroke="#546E7A" stroke-width="1.5" stroke-dasharray="none"/>
+<polyline points="600,348 592,343 592,353 600,348" fill="#546E7A"/>
+<path d="M 270 131 L 435 131 L 435 535 L 600 535" fill="none" stroke="#546E7A" stroke-width="1.5" stroke-dasharray="none"/>
+<polyline points="600,535 592,530 592,540 600,535" fill="#546E7A"/>
+<path d="M 270 655 L 435 655 L 435 535 L 600 535" fill="none" stroke="#546E7A" stroke-width="1.5" stroke-dasharray="none"/>
+<polyline points="600,535 592,530 592,540 600,535" fill="#546E7A"/>
+<path d="M 270 972 L 435 972 L 435 535 L 600 535" fill="none" stroke="#546E7A" stroke-width="1.5" stroke-dasharray="none"/>
+<polyline points="600,535 592,530 592,540 600,535" fill="#546E7A"/>
+<path d="M 270 131 L 435 131 L 435 712 L 600 712" fill="none" stroke="#546E7A" stroke-width="1.5" stroke-dasharray="none"/>
+<polyline points="600,712 592,707 592,717 600,712" fill="#546E7A"/>
+<path d="M 270 655 L 435 655 L 435 712 L 600 712" fill="none" stroke="#546E7A" stroke-width="1.5" stroke-dasharray="none"/>
+<polyline points="600,712 592,707 592,717 600,712" fill="#546E7A"/>
+<rect x="42" y="42" width="230" height="182" rx="6" fill="#00000010"/>
+<rect x="40" y="40" width="230" height="182" rx="6" fill="#E8F0FE" stroke="#90A4AE" stroke-width="1.5"/>
+<rect x="40" y="40" width="230" height="182" rx="6" fill="#E8F0FE" stroke="#90A4AE" stroke-width="1.5" filter="url(#shadow)"/>
+<rect x="40" y="40" width="230" height="30" rx="6" fill="#1A237E"/>
+<rect x="40" y="64" width="230" height="6" fill="#1A237E"/>
+<text x="155" y="60" font-family="Arial" font-size="11" fill="white" text-anchor="middle" font-weight="bold">users</text>
+<text x="48" y="88" font-family="Consolas, monospace" font-size="9" fill="#333">🔑 id</text>
+<text x="262" y="88" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID</text>
+<text x="48" y="108" font-family="Consolas, monospace" font-size="9" fill="#333">email</text>
+<text x="262" y="108" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TEXT UNIQUE</text>
+<text x="48" y="128" font-family="Consolas, monospace" font-size="9" fill="#333">full_name</text>
+<text x="262" y="128" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TEXT</text>
+<text x="48" y="148" font-family="Consolas, monospace" font-size="9" fill="#333">phone</text>
+<text x="262" y="148" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TEXT</text>
+<text x="48" y="168" font-family="Consolas, monospace" font-size="9" fill="#333">role</text>
+<text x="262" y="168" font-family="Arial" font-size="8" fill="#777" text-anchor="end">customer | admin</text>
+<text x="48" y="188" font-family="Consolas, monospace" font-size="9" fill="#333">created_at</text>
+<text x="262" y="188" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TIMESTAMPTZ</text>
+<text x="48" y="208" font-family="Consolas, monospace" font-size="9" fill="#333">updated_at</text>
+<text x="262" y="208" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TIMESTAMPTZ</text>
+<line x1="42" y1="72" x2="268" y2="72" stroke="#CFD8DC" stroke-width="0.5"/>
+<rect x="42" y="259" width="230" height="202" rx="6" fill="#00000010"/>
+<rect x="40" y="257" width="230" height="202" rx="6" fill="#E6F4EA" stroke="#90A4AE" stroke-width="1.5"/>
+<rect x="40" y="257" width="230" height="202" rx="6" fill="#E6F4EA" stroke="#90A4AE" stroke-width="1.5" filter="url(#shadow)"/>
+<rect x="40" y="257" width="230" height="30" rx="6" fill="#1A237E"/>
+<rect x="40" y="281" width="230" height="6" fill="#1A237E"/>
+<text x="155" y="277" font-family="Arial" font-size="11" fill="white" text-anchor="middle" font-weight="bold">categories</text>
+<text x="48" y="305" font-family="Consolas, monospace" font-size="9" fill="#333">🔑 id</text>
+<text x="262" y="305" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID</text>
+<text x="48" y="325" font-family="Consolas, monospace" font-size="9" fill="#333">name</text>
+<text x="262" y="325" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TEXT</text>
+<text x="48" y="345" font-family="Consolas, monospace" font-size="9" fill="#333">slug</text>
+<text x="262" y="345" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TEXT UNIQUE</text>
+<text x="48" y="365" font-family="Consolas, monospace" font-size="9" fill="#333">description</text>
+<text x="262" y="365" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TEXT</text>
+<text x="48" y="385" font-family="Consolas, monospace" font-size="9" fill="#333">image</text>
+<text x="262" y="385" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TEXT</text>
+<text x="48" y="405" font-family="Consolas, monospace" font-size="9" fill="#333">🔗 parent_id</text>
+<text x="262" y="405" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID → categories.id</text>
+<text x="48" y="425" font-family="Consolas, monospace" font-size="9" fill="#333">created_at</text>
+<text x="262" y="425" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TIMESTAMPTZ</text>
+<text x="48" y="445" font-family="Consolas, monospace" font-size="9" fill="#333">updated_at</text>
+<text x="262" y="445" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TIMESTAMPTZ</text>
+<line x1="42" y1="289" x2="268" y2="289" stroke="#CFD8DC" stroke-width="0.5"/>
+<rect x="42" y="496" width="230" height="322" rx="6" fill="#00000010"/>
+<rect x="40" y="494" width="230" height="322" rx="6" fill="#E6F4EA" stroke="#90A4AE" stroke-width="1.5"/>
+<rect x="40" y="494" width="230" height="322" rx="6" fill="#E6F4EA" stroke="#90A4AE" stroke-width="1.5" filter="url(#shadow)"/>
+<rect x="40" y="494" width="230" height="30" rx="6" fill="#1A237E"/>
+<rect x="40" y="518" width="230" height="6" fill="#1A237E"/>
+<text x="155" y="514" font-family="Arial" font-size="11" fill="white" text-anchor="middle" font-weight="bold">products</text>
+<text x="48" y="542" font-family="Consolas, monospace" font-size="9" fill="#333">🔑 id</text>
+<text x="262" y="542" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID</text>
+<text x="48" y="562" font-family="Consolas, monospace" font-size="9" fill="#333">product_code</text>
+<text x="262" y="562" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TEXT UNIQUE</text>
+<text x="48" y="582" font-family="Consolas, monospace" font-size="9" fill="#333">name</text>
+<text x="262" y="582" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TEXT</text>
+<text x="48" y="602" font-family="Consolas, monospace" font-size="9" fill="#333">description</text>
+<text x="262" y="602" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TEXT</text>
+<text x="48" y="622" font-family="Consolas, monospace" font-size="9" fill="#333">🔗 category_id</text>
+<text x="262" y="622" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID → categories.id</text>
+<text x="48" y="642" font-family="Consolas, monospace" font-size="9" fill="#333">brand</text>
+<text x="262" y="642" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TEXT</text>
+<text x="48" y="662" font-family="Consolas, monospace" font-size="9" fill="#333">status</text>
+<text x="262" y="662" font-family="Arial" font-size="8" fill="#777" text-anchor="end">active | inactive</text>
+<text x="48" y="682" font-family="Consolas, monospace" font-size="9" fill="#333">gender</text>
+<text x="262" y="682" font-family="Arial" font-size="8" fill="#777" text-anchor="end">male | female | unisex</text>
+<text x="48" y="702" font-family="Consolas, monospace" font-size="9" fill="#333">product_type</text>
+<text x="262" y="702" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TEXT</text>
+<text x="48" y="722" font-family="Consolas, monospace" font-size="9" fill="#333">sub_type</text>
+<text x="262" y="722" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TEXT</text>
+<text x="48" y="742" font-family="Consolas, monospace" font-size="9" fill="#333">average_rating</text>
+<text x="262" y="742" font-family="Arial" font-size="8" fill="#777" text-anchor="end">NUMERIC</text>
+<text x="48" y="762" font-family="Consolas, monospace" font-size="9" fill="#333">review_count</text>
+<text x="262" y="762" font-family="Arial" font-size="8" fill="#777" text-anchor="end">INTEGER</text>
+<text x="48" y="782" font-family="Consolas, monospace" font-size="9" fill="#333">created_at</text>
+<text x="262" y="782" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TIMESTAMPTZ</text>
+<text x="48" y="802" font-family="Consolas, monospace" font-size="9" fill="#333">updated_at</text>
+<text x="262" y="802" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TIMESTAMPTZ</text>
+<line x1="42" y1="526" x2="268" y2="526" stroke="#CFD8DC" stroke-width="0.5"/>
+<rect x="42" y="853" width="230" height="242" rx="6" fill="#00000010"/>
+<rect x="40" y="851" width="230" height="242" rx="6" fill="#E6F4EA" stroke="#90A4AE" stroke-width="1.5"/>
+<rect x="40" y="851" width="230" height="242" rx="6" fill="#E6F4EA" stroke="#90A4AE" stroke-width="1.5" filter="url(#shadow)"/>
+<rect x="40" y="851" width="230" height="30" rx="6" fill="#1A237E"/>
+<rect x="40" y="875" width="230" height="6" fill="#1A237E"/>
+<text x="155" y="871" font-family="Arial" font-size="11" fill="white" text-anchor="middle" font-weight="bold">product_variants</text>
+<text x="48" y="899" font-family="Consolas, monospace" font-size="9" fill="#333">🔑 id</text>
+<text x="262" y="899" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID</text>
+<text x="48" y="919" font-family="Consolas, monospace" font-size="9" fill="#333">🔗 product_id</text>
+<text x="262" y="919" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID → products.id</text>
+<text x="48" y="939" font-family="Consolas, monospace" font-size="9" fill="#333">size</text>
+<text x="262" y="939" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TEXT</text>
+<text x="48" y="959" font-family="Consolas, monospace" font-size="9" fill="#333">color</text>
+<text x="262" y="959" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TEXT</text>
+<text x="48" y="979" font-family="Consolas, monospace" font-size="9" fill="#333">price</text>
+<text x="262" y="979" font-family="Arial" font-size="8" fill="#777" text-anchor="end">NUMERIC</text>
+<text x="48" y="999" font-family="Consolas, monospace" font-size="9" fill="#333">quantity</text>
+<text x="262" y="999" font-family="Arial" font-size="8" fill="#777" text-anchor="end">INTEGER</text>
+<text x="48" y="1019" font-family="Consolas, monospace" font-size="9" fill="#333">sku</text>
+<text x="262" y="1019" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TEXT UNIQUE</text>
+<text x="48" y="1039" font-family="Consolas, monospace" font-size="9" fill="#333">image</text>
+<text x="262" y="1039" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TEXT</text>
+<text x="48" y="1059" font-family="Consolas, monospace" font-size="9" fill="#333">created_at</text>
+<text x="262" y="1059" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TIMESTAMPTZ</text>
+<text x="48" y="1079" font-family="Consolas, monospace" font-size="9" fill="#333">updated_at</text>
+<text x="262" y="1079" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TIMESTAMPTZ</text>
+<line x1="42" y1="883" x2="268" y2="883" stroke="#CFD8DC" stroke-width="0.5"/>
+<rect x="322" y="42" width="230" height="162" rx="6" fill="#00000010"/>
+<rect x="320" y="40" width="230" height="162" rx="6" fill="#FFF3E0" stroke="#90A4AE" stroke-width="1.5"/>
+<rect x="320" y="40" width="230" height="162" rx="6" fill="#FFF3E0" stroke="#90A4AE" stroke-width="1.5" filter="url(#shadow)"/>
+<rect x="320" y="40" width="230" height="30" rx="6" fill="#1A237E"/>
+<rect x="320" y="64" width="230" height="6" fill="#1A237E"/>
+<text x="435" y="60" font-family="Arial" font-size="11" fill="white" text-anchor="middle" font-weight="bold">cart</text>
+<text x="328" y="88" font-family="Consolas, monospace" font-size="9" fill="#333">🔑 id</text>
+<text x="542" y="88" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID</text>
+<text x="328" y="108" font-family="Consolas, monospace" font-size="9" fill="#333">🔗 user_id</text>
+<text x="542" y="108" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID → users.id</text>
+<text x="328" y="128" font-family="Consolas, monospace" font-size="9" fill="#333">🔗 variant_id</text>
+<text x="542" y="128" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID → product_variants.id</text>
+<text x="328" y="148" font-family="Consolas, monospace" font-size="9" fill="#333">quantity</text>
+<text x="542" y="148" font-family="Arial" font-size="8" fill="#777" text-anchor="end">INTEGER</text>
+<text x="328" y="168" font-family="Consolas, monospace" font-size="9" fill="#333">created_at</text>
+<text x="542" y="168" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TIMESTAMPTZ</text>
+<text x="328" y="188" font-family="Consolas, monospace" font-size="9" fill="#333">updated_at</text>
+<text x="542" y="188" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TIMESTAMPTZ</text>
+<line x1="322" y1="72" x2="548" y2="72" stroke="#CFD8DC" stroke-width="0.5"/>
+<rect x="322" y="239" width="230" height="222" rx="6" fill="#00000010"/>
+<rect x="320" y="237" width="230" height="222" rx="6" fill="#FFF3E0" stroke="#90A4AE" stroke-width="1.5"/>
+<rect x="320" y="237" width="230" height="222" rx="6" fill="#FFF3E0" stroke="#90A4AE" stroke-width="1.5" filter="url(#shadow)"/>
+<rect x="320" y="237" width="230" height="30" rx="6" fill="#1A237E"/>
+<rect x="320" y="261" width="230" height="6" fill="#1A237E"/>
+<text x="435" y="257" font-family="Arial" font-size="11" fill="white" text-anchor="middle" font-weight="bold">orders</text>
+<text x="328" y="285" font-family="Consolas, monospace" font-size="9" fill="#333">🔑 id</text>
+<text x="542" y="285" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID</text>
+<text x="328" y="305" font-family="Consolas, monospace" font-size="9" fill="#333">🔗 user_id</text>
+<text x="542" y="305" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID → users.id</text>
+<text x="328" y="325" font-family="Consolas, monospace" font-size="9" fill="#333">total_amount</text>
+<text x="542" y="325" font-family="Arial" font-size="8" fill="#777" text-anchor="end">NUMERIC</text>
+<text x="328" y="345" font-family="Consolas, monospace" font-size="9" fill="#333">status</text>
+<text x="542" y="345" font-family="Arial" font-size="8" fill="#777" text-anchor="end">order status</text>
+<text x="328" y="365" font-family="Consolas, monospace" font-size="9" fill="#333">payment_method</text>
+<text x="542" y="365" font-family="Arial" font-size="8" fill="#777" text-anchor="end">online | cod</text>
+<text x="328" y="385" font-family="Consolas, monospace" font-size="9" fill="#333">payment_status</text>
+<text x="542" y="385" font-family="Arial" font-size="8" fill="#777" text-anchor="end">pending | paid | failed</text>
+<text x="328" y="405" font-family="Consolas, monospace" font-size="9" fill="#333">shipping_address</text>
+<text x="542" y="405" font-family="Arial" font-size="8" fill="#777" text-anchor="end">JSONB</text>
+<text x="328" y="425" font-family="Consolas, monospace" font-size="9" fill="#333">created_at</text>
+<text x="542" y="425" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TIMESTAMPTZ</text>
+<text x="328" y="445" font-family="Consolas, monospace" font-size="9" fill="#333">updated_at</text>
+<text x="542" y="445" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TIMESTAMPTZ</text>
+<line x1="322" y1="269" x2="548" y2="269" stroke="#CFD8DC" stroke-width="0.5"/>
+<rect x="322" y="496" width="230" height="182" rx="6" fill="#00000010"/>
+<rect x="320" y="494" width="230" height="182" rx="6" fill="#FFF3E0" stroke="#90A4AE" stroke-width="1.5"/>
+<rect x="320" y="494" width="230" height="182" rx="6" fill="#FFF3E0" stroke="#90A4AE" stroke-width="1.5" filter="url(#shadow)"/>
+<rect x="320" y="494" width="230" height="30" rx="6" fill="#1A237E"/>
+<rect x="320" y="518" width="230" height="6" fill="#1A237E"/>
+<text x="435" y="514" font-family="Arial" font-size="11" fill="white" text-anchor="middle" font-weight="bold">order_items</text>
+<text x="328" y="542" font-family="Consolas, monospace" font-size="9" fill="#333">🔑 id</text>
+<text x="542" y="542" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID</text>
+<text x="328" y="562" font-family="Consolas, monospace" font-size="9" fill="#333">🔗 order_id</text>
+<text x="542" y="562" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID → orders.id</text>
+<text x="328" y="582" font-family="Consolas, monospace" font-size="9" fill="#333">🔗 product_id</text>
+<text x="542" y="582" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID → products.id</text>
+<text x="328" y="602" font-family="Consolas, monospace" font-size="9" fill="#333">🔗 variant_id</text>
+<text x="542" y="602" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID → product_variants.id</text>
+<text x="328" y="622" font-family="Consolas, monospace" font-size="9" fill="#333">quantity</text>
+<text x="542" y="622" font-family="Arial" font-size="8" fill="#777" text-anchor="end">INTEGER</text>
+<text x="328" y="642" font-family="Consolas, monospace" font-size="9" fill="#333">price</text>
+<text x="542" y="642" font-family="Arial" font-size="8" fill="#777" text-anchor="end">NUMERIC</text>
+<text x="328" y="662" font-family="Consolas, monospace" font-size="9" fill="#333">created_at</text>
+<text x="542" y="662" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TIMESTAMPTZ</text>
+<line x1="322" y1="526" x2="548" y2="526" stroke="#CFD8DC" stroke-width="0.5"/>
+<rect x="322" y="713" width="230" height="202" rx="6" fill="#00000010"/>
+<rect x="320" y="711" width="230" height="202" rx="6" fill="#FFEBEE" stroke="#90A4AE" stroke-width="1.5"/>
+<rect x="320" y="711" width="230" height="202" rx="6" fill="#FFEBEE" stroke="#90A4AE" stroke-width="1.5" filter="url(#shadow)"/>
+<rect x="320" y="711" width="230" height="30" rx="6" fill="#1A237E"/>
+<rect x="320" y="735" width="230" height="6" fill="#1A237E"/>
+<text x="435" y="731" font-family="Arial" font-size="11" fill="white" text-anchor="middle" font-weight="bold">payments</text>
+<text x="328" y="759" font-family="Consolas, monospace" font-size="9" fill="#333">🔑 id</text>
+<text x="542" y="759" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID</text>
+<text x="328" y="779" font-family="Consolas, monospace" font-size="9" fill="#333">🔗 order_id</text>
+<text x="542" y="779" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID → orders.id</text>
+<text x="328" y="799" font-family="Consolas, monospace" font-size="9" fill="#333">🔗 user_id</text>
+<text x="542" y="799" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID → users.id</text>
+<text x="328" y="819" font-family="Consolas, monospace" font-size="9" fill="#333">amount</text>
+<text x="542" y="819" font-family="Arial" font-size="8" fill="#777" text-anchor="end">NUMERIC</text>
+<text x="328" y="839" font-family="Consolas, monospace" font-size="9" fill="#333">method</text>
+<text x="542" y="839" font-family="Arial" font-size="8" fill="#777" text-anchor="end">online | cod</text>
+<text x="328" y="859" font-family="Consolas, monospace" font-size="9" fill="#333">status</text>
+<text x="542" y="859" font-family="Arial" font-size="8" fill="#777" text-anchor="end">payment status</text>
+<text x="328" y="879" font-family="Consolas, monospace" font-size="9" fill="#333">transaction_id</text>
+<text x="542" y="879" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TEXT</text>
+<text x="328" y="899" font-family="Consolas, monospace" font-size="9" fill="#333">created_at</text>
+<text x="542" y="899" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TIMESTAMPTZ</text>
+<line x1="322" y1="743" x2="548" y2="743" stroke="#CFD8DC" stroke-width="0.5"/>
+<rect x="602" y="42" width="230" height="202" rx="6" fill="#00000010"/>
+<rect x="600" y="40" width="230" height="202" rx="6" fill="#F3E5F5" stroke="#90A4AE" stroke-width="1.5"/>
+<rect x="600" y="40" width="230" height="202" rx="6" fill="#F3E5F5" stroke="#90A4AE" stroke-width="1.5" filter="url(#shadow)"/>
+<rect x="600" y="40" width="230" height="30" rx="6" fill="#1A237E"/>
+<rect x="600" y="64" width="230" height="6" fill="#1A237E"/>
+<text x="715" y="60" font-family="Arial" font-size="11" fill="white" text-anchor="middle" font-weight="bold">reviews</text>
+<text x="608" y="88" font-family="Consolas, monospace" font-size="9" fill="#333">🔑 id</text>
+<text x="822" y="88" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID</text>
+<text x="608" y="108" font-family="Consolas, monospace" font-size="9" fill="#333">🔗 product_id</text>
+<text x="822" y="108" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID → products.id</text>
+<text x="608" y="128" font-family="Consolas, monospace" font-size="9" fill="#333">🔗 user_id</text>
+<text x="822" y="128" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID → users.id</text>
+<text x="608" y="148" font-family="Consolas, monospace" font-size="9" fill="#333">rating</text>
+<text x="822" y="148" font-family="Arial" font-size="8" fill="#777" text-anchor="end">INTEGER (1-5)</text>
+<text x="608" y="168" font-family="Consolas, monospace" font-size="9" fill="#333">comment</text>
+<text x="822" y="168" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TEXT</text>
+<text x="608" y="188" font-family="Consolas, monospace" font-size="9" fill="#333">language</text>
+<text x="822" y="188" font-family="Arial" font-size="8" fill="#777" text-anchor="end">english | bangla | banglish</text>
+<text x="608" y="208" font-family="Consolas, monospace" font-size="9" fill="#333">created_at</text>
+<text x="822" y="208" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TIMESTAMPTZ</text>
+<text x="608" y="228" font-family="Consolas, monospace" font-size="9" fill="#333">updated_at</text>
+<text x="822" y="228" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TIMESTAMPTZ</text>
+<line x1="602" y1="72" x2="828" y2="72" stroke="#CFD8DC" stroke-width="0.5"/>
+<rect x="602" y="279" width="230" height="142" rx="6" fill="#00000010"/>
+<rect x="600" y="277" width="230" height="142" rx="6" fill="#F3E5F5" stroke="#90A4AE" stroke-width="1.5"/>
+<rect x="600" y="277" width="230" height="142" rx="6" fill="#F3E5F5" stroke="#90A4AE" stroke-width="1.5" filter="url(#shadow)"/>
+<rect x="600" y="277" width="230" height="30" rx="6" fill="#1A237E"/>
+<rect x="600" y="301" width="230" height="6" fill="#1A237E"/>
+<text x="715" y="297" font-family="Arial" font-size="11" fill="white" text-anchor="middle" font-weight="bold">search_logs</text>
+<text x="608" y="325" font-family="Consolas, monospace" font-size="9" fill="#333">🔑 id</text>
+<text x="822" y="325" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID</text>
+<text x="608" y="345" font-family="Consolas, monospace" font-size="9" fill="#333">🔗 user_id</text>
+<text x="822" y="345" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID → users.id</text>
+<text x="608" y="365" font-family="Consolas, monospace" font-size="9" fill="#333">query</text>
+<text x="822" y="365" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TEXT</text>
+<text x="608" y="385" font-family="Consolas, monospace" font-size="9" fill="#333">results_count</text>
+<text x="822" y="385" font-family="Arial" font-size="8" fill="#777" text-anchor="end">INTEGER</text>
+<text x="608" y="405" font-family="Consolas, monospace" font-size="9" fill="#333">created_at</text>
+<text x="822" y="405" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TIMESTAMPTZ</text>
+<line x1="602" y1="309" x2="828" y2="309" stroke="#CFD8DC" stroke-width="0.5"/>
+<rect x="602" y="456" width="230" height="162" rx="6" fill="#00000010"/>
+<rect x="600" y="454" width="230" height="162" rx="6" fill="#F3E5F5" stroke="#90A4AE" stroke-width="1.5"/>
+<rect x="600" y="454" width="230" height="162" rx="6" fill="#F3E5F5" stroke="#90A4AE" stroke-width="1.5" filter="url(#shadow)"/>
+<rect x="600" y="454" width="230" height="30" rx="6" fill="#1A237E"/>
+<rect x="600" y="478" width="230" height="6" fill="#1A237E"/>
+<text x="715" y="474" font-family="Arial" font-size="11" fill="white" text-anchor="middle" font-weight="bold">click_events</text>
+<text x="608" y="502" font-family="Consolas, monospace" font-size="9" fill="#333">🔑 id</text>
+<text x="822" y="502" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID</text>
+<text x="608" y="522" font-family="Consolas, monospace" font-size="9" fill="#333">🔗 user_id</text>
+<text x="822" y="522" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID → users.id</text>
+<text x="608" y="542" font-family="Consolas, monospace" font-size="9" fill="#333">🔗 product_id</text>
+<text x="822" y="542" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID → products.id</text>
+<text x="608" y="562" font-family="Consolas, monospace" font-size="9" fill="#333">🔗 variant_id</text>
+<text x="822" y="562" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID → product_variants.id</text>
+<text x="608" y="582" font-family="Consolas, monospace" font-size="9" fill="#333">event_type</text>
+<text x="822" y="582" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TEXT</text>
+<text x="608" y="602" font-family="Consolas, monospace" font-size="9" fill="#333">created_at</text>
+<text x="822" y="602" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TIMESTAMPTZ</text>
+<line x1="602" y1="486" x2="828" y2="486" stroke="#CFD8DC" stroke-width="0.5"/>
+<rect x="602" y="653" width="230" height="122" rx="6" fill="#00000010"/>
+<rect x="600" y="651" width="230" height="122" rx="6" fill="#F3E5F5" stroke="#90A4AE" stroke-width="1.5"/>
+<rect x="600" y="651" width="230" height="122" rx="6" fill="#F3E5F5" stroke="#90A4AE" stroke-width="1.5" filter="url(#shadow)"/>
+<rect x="600" y="651" width="230" height="30" rx="6" fill="#1A237E"/>
+<rect x="600" y="675" width="230" height="6" fill="#1A237E"/>
+<text x="715" y="671" font-family="Arial" font-size="11" fill="white" text-anchor="middle" font-weight="bold">wishlist</text>
+<text x="608" y="699" font-family="Consolas, monospace" font-size="9" fill="#333">🔑 id</text>
+<text x="822" y="699" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID</text>
+<text x="608" y="719" font-family="Consolas, monospace" font-size="9" fill="#333">🔗 user_id</text>
+<text x="822" y="719" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID → users.id</text>
+<text x="608" y="739" font-family="Consolas, monospace" font-size="9" fill="#333">🔗 product_id</text>
+<text x="822" y="739" font-family="Arial" font-size="8" fill="#777" text-anchor="end">UUID → products.id</text>
+<text x="608" y="759" font-family="Consolas, monospace" font-size="9" fill="#333">created_at</text>
+<text x="822" y="759" font-family="Arial" font-size="8" fill="#777" text-anchor="end">TIMESTAMPTZ</text>
+<line x1="602" y1="683" x2="828" y2="683" stroke="#CFD8DC" stroke-width="0.5"/>
+<rect x="660" y="1058" width="200" height="100" rx="6" fill="white" stroke="#B0BEC5" stroke-width="1" filter="url(#shadow)"/>
+<text x="760" y="1076" font-family="Arial" font-size="10" fill="#333" text-anchor="middle" font-weight="bold">Legend</text>
+<text x="672" y="1096" font-family="Arial" font-size="9" fill="#555">🔑  Primary Key (PK)</text>
+<text x="672" y="1113" font-family="Arial" font-size="9" fill="#555">🔗  Foreign Key (FK)</text>
+<text x="672" y="1130" font-family="Arial" font-size="9" fill="#555">→  References</text>
+<text x="672" y="1147" font-family="Arial" font-size="9" fill="#555">└─  Crow's foot (One-to-Many)</text>
+<rect x="40" y="1118" width="500" height="40" rx="6" fill="white" stroke="#CFD8DC" stroke-width="0.5"/>
+<rect x="52" y="1130" width="12" height="12" rx="2" fill="#E8F0FE" stroke="#90A4AE" stroke-width="0.5"/>
+<text x="70" y="1140" font-family="Arial" font-size="9" fill="#555">Core (Users)</text>
+<rect x="157" y="1130" width="12" height="12" rx="2" fill="#E6F4EA" stroke="#90A4AE" stroke-width="0.5"/>
+<text x="175" y="1140" font-family="Arial" font-size="9" fill="#555">Product Catalog</text>
+<rect x="262" y="1130" width="12" height="12" rx="2" fill="#FFF3E0" stroke="#90A4AE" stroke-width="0.5"/>
+<text x="280" y="1140" font-family="Arial" font-size="9" fill="#555">Order Processing</text>
+<rect x="367" y="1130" width="12" height="12" rx="2" fill="#FFEBEE" stroke="#90A4AE" stroke-width="0.5"/>
+<text x="385" y="1140" font-family="Arial" font-size="9" fill="#555">Payments</text>
+<rect x="472" y="1130" width="12" height="12" rx="2" fill="#F3E5F5" stroke="#90A4AE" stroke-width="0.5"/>
+<text x="490" y="1140" font-family="Arial" font-size="9" fill="#555">Tracking &amp; Behavior</text>
+</svg>

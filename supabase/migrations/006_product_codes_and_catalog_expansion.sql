@@ -128,81 +128,81 @@ BEGIN
 END $$;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, 'M', 'Black', 18.99, 70, 'MTEE-004', NULL
+SELECT p.id, 'M', 'Black', 2320, 70, 'MTEE-004', NULL
 FROM products p WHERE p.name = 'Minimal Graphic T-Shirt'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, 'L', 'Olive', 18.99, 55, 'MTEE-005', NULL
+SELECT p.id, 'L', 'Olive', 2320, 55, 'MTEE-005', NULL
 FROM products p WHERE p.name = 'Minimal Graphic T-Shirt'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, '32', 'Navy', 42.99, 36, 'MJEAN-001', NULL
+SELECT p.id, '32', 'Navy', 5240, 36, 'MJEAN-001', NULL
 FROM products p WHERE p.name = 'Classic Denim Jeans'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, '34', 'Deep Blue', 42.99, 32, 'MJEAN-002', NULL
+SELECT p.id, '34', 'Deep Blue', 5240, 32, 'MJEAN-002', NULL
 FROM products p WHERE p.name = 'Classic Denim Jeans'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, 'L', 'Maroon', 49.99, 18, 'MPANJ-004', NULL
+SELECT p.id, 'L', 'Maroon', 6100, 18, 'MPANJ-004', NULL
 FROM products p WHERE p.name = 'Festival Embroidered Panjabi'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, 'XL', 'Bottle Green', 52.99, 14, 'MPANJ-005', NULL
+SELECT p.id, 'XL', 'Bottle Green', 6460, 14, 'MPANJ-005', NULL
 FROM products p WHERE p.name = 'Festival Embroidered Panjabi'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, 'L', 'Grey', 16.99, 28, 'MPAJ-001', NULL
+SELECT p.id, 'L', 'Grey', 2070, 28, 'MPAJ-001', NULL
 FROM products p WHERE p.name = 'Comfort Pajama Bottom'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, '38', 'Black', 44.99, 22, 'WHEEL-001', NULL
+SELECT p.id, '38', 'Black', 5490, 22, 'WHEEL-001', NULL
 FROM products p WHERE p.name = 'Elegant Heel Sandal'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, '39', 'Beige', 44.99, 18, 'WHEEL-002', NULL
+SELECT p.id, '39', 'Beige', 5490, 18, 'WHEEL-002', NULL
 FROM products p WHERE p.name = 'Elegant Heel Sandal'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, '38', 'Tan', 24.99, 34, 'WSAND-001', NULL
+SELECT p.id, '38', 'Tan', 3050, 34, 'WSAND-001', NULL
 FROM products p WHERE p.name = 'Daily Comfort Sandal'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, '100ml', NULL, 39.99, 30, 'WPERF-001', NULL
+SELECT p.id, '100ml', NULL, 4880, 30, 'WPERF-001', NULL
 FROM products p WHERE p.name = 'Luxury Rose Perfume'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, 'One Size', 'Rose Gold', 69.99, 20, 'WWATCH-001', NULL
+SELECT p.id, 'One Size', 'Rose Gold', 8540, 20, 'WWATCH-001', NULL
 FROM products p WHERE p.name = 'Crystal Dial Women''s Watch'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, 'Standard', 'Matte Black', 89.99, 27, 'HEAD-001', NULL
+SELECT p.id, 'Standard', 'Matte Black', 10980, 27, 'HEAD-001', NULL
 FROM products p WHERE p.name = 'Wireless Noise-Cancel Headphones'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, 'Standard', 'White', 39.99, 44, 'EAR-001', NULL
+SELECT p.id, 'Standard', 'White', 4880, 44, 'EAR-001', NULL
 FROM products p WHERE p.name = 'Pocket Bluetooth Earbuds'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, '33W', 'White', 19.99, 60, 'CHAR-001', NULL
+SELECT p.id, '33W', 'White', 2440, 60, 'CHAR-001', NULL
 FROM products p WHERE p.name = 'Fast Charge Adapter 33W'
 ON CONFLICT (sku) DO NOTHING;
 
 INSERT INTO product_variants (product_id, size, color, price, quantity, sku, image)
-SELECT p.id, '10000mAh', 'Black', 29.99, 42, 'PBANK-001', NULL
+SELECT p.id, '10000mAh', 'Black', 3660, 42, 'PBANK-001', NULL
 FROM products p WHERE p.name = 'Slim Power Bank 10000mAh'
 ON CONFLICT (sku) DO NOTHING;

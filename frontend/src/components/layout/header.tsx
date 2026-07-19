@@ -6,9 +6,10 @@ import { usePathname, useRouter } from "next/navigation";
 import { Search, ShoppingBag, User, Menu, X, ChevronRight } from "lucide-react";
 import { useAuth } from "@/components/layout/supabase-provider";
 import { supabase } from "@/lib/supabase";
+import { trackEvent, trackSearch } from "@/lib/track";
 import {
   buildSearchSuggestions,
-  FREE_SHIPPING_THRESHOLD_USD,
+  FREE_SHIPPING_THRESHOLD,
   formatCurrency,
   type ProductWithRelations,
 } from "@/lib/storefront";
@@ -77,6 +78,9 @@ export function Header() {
     const trimmed = query.trim();
     if (!trimmed) return;
 
+    // Log the search for the recommendation engine
+    trackSearch(trimmed, suggestions.length, user?.id ?? null);
+
     router.push(`/products?query=${encodeURIComponent(trimmed)}`);
     setSearchOpen(false);
     setMobileMenuOpen(false);
@@ -92,7 +96,7 @@ export function Header() {
         <div className="container mx-auto flex items-center justify-between px-4 py-2 text-[11px] uppercase tracking-[0.24em] text-white/55">
           <span>New season arrivals</span>
           <div className="hidden items-center gap-3 md:flex">
-            <span>Free shipping over {formatCurrency(FREE_SHIPPING_THRESHOLD_USD)}</span>
+            <span>Free shipping over {formatCurrency(FREE_SHIPPING_THRESHOLD)}</span>
             <ChevronRight size={12} />
             <span>Fast checkout</span>
           </div>
@@ -162,6 +166,11 @@ export function Header() {
                         key={product.id}
                         type="button"
                         onClick={() => {
+                          trackSearch(query, suggestions.length, user?.id ?? null);
+                          trackEvent("search_click", {
+                            productId: product.id,
+                            userId: user?.id ?? null,
+                          });
                           router.push(`/products/${product.id}`);
                           setSearchOpen(false);
                           setQuery(product.name);

@@ -13,6 +13,8 @@ type ImageSize =
 
 interface SmartImageProps extends ImgHTMLAttributes<HTMLImageElement> {
   fallbackPrompt: string;
+  /** Local image path to try first when the primary src fails (before AI fallback) */
+  fallbackSrc?: string;
   imageSize?: ImageSize;
 }
 
@@ -23,11 +25,12 @@ function buildGeneratedImageUrl(prompt: string, imageSize: ImageSize) {
 export function SmartImage({
    src,
    alt,
+   fallbackSrc,
    fallbackPrompt,
    imageSize = "square",
    ...props
  }: SmartImageProps) {
-   const fallbackSrc = useMemo(
+   const aiFallbackSrc = useMemo(
      () => buildGeneratedImageUrl(fallbackPrompt, imageSize),
      [fallbackPrompt, imageSize]
    );
@@ -36,16 +39,34 @@ export function SmartImage({
     // eslint-disable-next-line @next/next/no-img-element
      <img
        {...props}
-       src={src || fallbackSrc}
+       src={src || fallbackSrc || aiFallbackSrc}
        alt={alt}
        onError={(event) => {
          const target = event.currentTarget;
-         if (target.dataset.fallbackApplied === "true") {
+         const stage = target.dataset.fallbackStage || "0";
+
+         // Stage 0 → no fallback attempted yet
+         if (stage === "0") {
+           if (fallbackSrc && target.src !== fallbackSrc) {
+             // Try local fallback image first
+             target.dataset.fallbackStage = "1";
+             target.src = fallbackSrc;
+             return;
+           }
+           // No local fallback, go straight to AI
+           target.dataset.fallbackStage = "2";
+           target.src = aiFallbackSrc;
            return;
          }
 
-         target.dataset.fallbackApplied = "true";
-         target.src = fallbackSrc;
+         // Stage 1 → local fallback also failed, try AI-generated
+         if (stage === "1") {
+           target.dataset.fallbackStage = "2";
+           target.src = aiFallbackSrc;
+           return;
+         }
+
+         // Stage 2 → nothing more to try
        }}
      />
    );

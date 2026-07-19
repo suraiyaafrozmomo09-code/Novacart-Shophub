@@ -21,11 +21,11 @@ import {
 
 const priceRanges = [
   { label: "All Prices", min: 0, max: Infinity },
-  { label: `Under ${formatCurrency(50)}`, min: 0, max: 50 },
-  { label: `${formatCurrency(50)} - ${formatCurrency(100)}`, min: 50, max: 100 },
-  { label: `${formatCurrency(100)} - ${formatCurrency(200)}`, min: 100, max: 200 },
-  { label: `${formatCurrency(200)} - ${formatCurrency(500)}`, min: 200, max: 500 },
-  { label: `Over ${formatCurrency(500)}`, min: 500, max: Infinity },
+  { label: `Under ${formatCurrency(5000)}`, min: 0, max: 5000 },
+  { label: `${formatCurrency(5000)} - ${formatCurrency(10000)}`, min: 5000, max: 10000 },
+  { label: `${formatCurrency(10000)} - ${formatCurrency(25000)}`, min: 10000, max: 25000 },
+  { label: `${formatCurrency(25000)} - ${formatCurrency(50000)}`, min: 25000, max: 50000 },
+  { label: `Over ${formatCurrency(50000)}`, min: 50000, max: Infinity },
 ];
 
 function ProductsContent() {
@@ -288,6 +288,7 @@ function ProductsContent() {
                           src={getProductDisplaySrc(product, product.variants?.[0])}
                           alt={product.name}
                           fallbackPrompt={getProductImagePrompt(product, product.variants?.[0])}
+                          fallbackSrc={getProductDisplaySrc(product)}
                           imageSize="square"
                           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                         />
@@ -339,6 +340,7 @@ function ProductsContent() {
                         src={getProductDisplaySrc(product, product.variants?.[0])}
                         alt={product.name}
                         fallbackPrompt={getProductImagePrompt(product, product.variants?.[0])}
+                        fallbackSrc={getProductDisplaySrc(product)}
                         imageSize="square"
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
